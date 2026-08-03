@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esports Schedule</title>
+    <style>
+        /* Modern Gaming Dark Theme Variables */
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #10b981;
+        }
+
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Header Styling */
+        header {
+            background-color: var(--card-bg);
+            padding: 1.5rem 2rem;
+            border-bottom: 3px solid var(--accent-blue);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        header h1 span {
+            color: var(--accent-blue);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .section-title {
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            border-left: 4px solid var(--accent-green);
+            padding-left: 0.8rem;
+        }
+
+        /* Match Card Styling */
+        .match-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .match-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Teams Section */
+        .match-teams {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .team {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .vs-badge {
+            background-color: #334155;
+            color: var(--text-muted);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        /* Match Details */
+        .match-info {
+            text-align: right;
+        }
+
+        .game-title {
+            color: var(--accent-blue);
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+        }
+
+        .match-time {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 600px) {
+            .match-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            .match-info {
+                text-align: center;
+            }
+            .match-time {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Esports <span>Schedule</span></h1>
+    </header>
+
+    <div class="container">
+        <h2 class="section-title">Upcoming Matches</h2>
+
+        <!-- Match 1 -->
+        <div class="match-card">
+            <div class="match-teams">
+                <div class="team">Team Liquid</div>
+                <div class="vs-badge">VS</div>
+                <div class="team">Cloud9</div>
+            </div>
+            <div class="match-info">
+                <div class="game-title">Valorant Champions Tour</div>
+                <div class="match-time">
+                    📅 Aug 15, 2026 | 🕒 18:00 BDT
+                </div>
+            </div>
+        </div>
+
+        <!-- Match 2 -->
+        <div class="match-card">
+            <div class="match-teams">
+                <div class="team">T1</div>
+                <div class="vs-badge">VS</div>
+                <div class="team">Gen.G</div>
+            </div>
+            <div class="match-info">
+                <div class="game-title">League of Legends - LCK</div>
+                <div class="match-time">
+                    📅 Aug 16, 2026 | 🕒 14:30 BDT
+                </div>
+            </div>
+        </div>
+
+        <!-- Match 3 -->
+        <div class="match-card">
+            <div class="match-teams">
+                <div class="team">FaZe Clan</div>
+                <div class="vs-badge">VS</div>
+                <div class="team">NAVI</div>
+            </div>
+            <div class="match-info">
+                <div class="game-title">CS2 Major Championship</div>
+                <div class="match-time">
+                    📅 Aug 17, 2026 | 🕒 21:00 BDT
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+  </html>
+                  
