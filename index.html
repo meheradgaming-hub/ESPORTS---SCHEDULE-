@@ -1,446 +1,48 @@
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Esports Schedule Helper</title>
-    <style>
-        :root {
-            --bg-color: #0b0f19;
-            --card-bg: #131b2e;
-            --border-color: #1e293b;
-            --gold: #f59e0b;
-            --gold-hover: #d97706;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-        }
+  <head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4ZK3379XSY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+  gtag('config', 'G-4ZK3379XSY');
+</script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ESPORTS SCHEDULE HELPER</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/favicon-64.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding-bottom: 70px;
-        }
+    <!-- Open Graph tags: এগুলো দেখেই Facebook/Messenger/WhatsApp লিংক প্রিভিউ বানায় -->
+    <meta property="og:title" content="ESPORTS SCHEDULE HELPER" />
+    <meta property="og:description" content="Tournament, Squad, Schedule, Players, Fund সব একসাথে ম্যানেজ করুন।" />
+    <meta property="og:image" content="https://esportsschedule.pages.dev/icon-512.png" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:url" content="https://esportsschedule.pages.dev" />
+    <meta property="og:type" content="website" />
 
-        /* Top Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
-        }
+    <!-- Twitter/X card (অনেক প্ল্যাটফর্ম এটাও ফলব্যাক হিসেবে ব্যবহার করে) -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="ESPORTS SCHEDULE HELPER" />
+    <meta name="twitter:image" content="https://esportsschedule.pages.dev/icon-512.png" />
 
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: bold;
-            font-size: 1.1rem;
-            letter-spacing: 1px;
-        }
-
-        .logo-area span {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-        }
-
-        .add-match-btn {
-            background-color: var(--gold);
-            color: #000;
-            border: none;
-            padding: 0.5rem 1rem;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-
-        /* Stats Cards */
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.8rem;
-            padding: 1rem;
-        }
-
-        .stat-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 1rem 0.5rem;
-            text-align: center;
-        }
-
-        .stat-card h3 {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-card .number {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--text-main);
-        }
-
-        /* Search & Tabs */
-        .search-box {
-            padding: 0 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .search-box input {
-            width: 100%;
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 0.8rem 1rem;
-            border-radius: 8px;
-            color: var(--text-main);
-            outline: none;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            padding: 0 1rem;
-            overflow-x: auto;
-            margin-bottom: 1.5rem;
-        }
-
-        .tab {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .tab.active {
-            background-color: var(--gold);
-            color: #000;
-            border-color: var(--gold);
-        }
-
-        /* Main Content Area */
-        .content-area {
-            text-align: center;
-            padding: 3rem 1rem;
-        }
-
-        .content-area p {
-            color: var(--text-muted);
-            margin-top: 1rem;
-            font-size: 0.9rem;
-        }
-
-        .big-add-btn {
-            background-color: var(--gold);
-            color: #000;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            font-weight: bold;
-            border-radius: 8px;
-            margin-top: 1.5rem;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        /* Modal / Pop-up Form */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            justify-content: center;
-            align-items: flex-end;
-            z-index: 1000;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background-color: var(--card-bg);
-            width: 100%;
-            max-height: 90vh;
-            border-top-left-radius: 16px;
-            border-top-right-radius: 16px;
-            padding: 1.5rem;
-            overflow-y: auto;
-            border-top: 2px solid var(--gold);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-header h2 {
-            color: var(--gold);
-            font-size: 1.2rem;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            margin-bottom: 0.4rem;
-        }
-
-        .form-control {
-            width: 100%;
-            background-color: var(--bg-color);
-            border: 1px solid var(--border-color);
-            padding: 0.7rem;
-            border-radius: 6px;
-            color: var(--text-main);
-            outline: none;
-        }
-
-        .badge-manager {
-            background-color: rgba(245, 158, 11, 0.15);
-            color: var(--gold);
-            font-size: 0.65rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-left: 5px;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .btn-cancel {
-            flex: 1;
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 0.8rem;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .btn-submit {
-            flex: 1;
-            background-color: var(--gold);
-            border: none;
-            color: #000;
-            padding: 0.8rem;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* Bottom Navigation Bar */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: var(--card-bg);
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-around;
-            padding: 0.6rem 0;
-            z-index: 99;
-        }
-
-        .nav-item {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.7rem;
-            text-decoration: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-
-        .nav-item.active {
-            color: var(--gold);
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Top Header -->
-    <div class="header">
-        <div class="logo-area">
-            ⚔️ NEO FLASH <span>SCHEDULE</span>
-        </div>
-        <button class="add-match-btn" onclick="toggleModal(true)">+ ADD MATCH</button>
-    </div>
-
-    <!-- Stats Section -->
-    <div class="stats-container">
-        <div class="stat-card">
-            <h3>Total</h3>
-            <div class="number">1</div>
-        </div>
-        <div class="stat-card">
-            <h3>Today</h3>
-            <div class="number" style="color: #38bdf8;">0</div>
-        </div>
-        <div class="stat-card">
-            <h3>Upcoming</h3>
-            <div class="number" style="color: var(--gold);">0</div>
-        </div>
-    </div>
-
-    <!-- Search Box -->
-    <div class="search-box">
-        <input type="text" placeholder="Search tournaments...">
-    </div>
-
-    <!-- Filter Tabs -->
-    <div class="tabs">
-        <div class="tab active">TODAY</div>
-        <div class="tab">UPCOMING</div>
-        <div class="tab">QUALIFIED</div>
-        <div class="tab">N.T.U 1</div>
-    </div>
-
-    <!-- Empty Content Area -->
-    <div class="content-area">
-        <div style="font-size: 3rem;">🎮</div>
-        <p>NO MATCHES TODAY</p>
-        <button class="big-add-btn" onclick="toggleModal(true)">+ ADD FIRST MATCH</button>
-    </div>
-
-    <!-- Add Match Modal / Pop-up -->
-    <div class="modal-overlay" id="matchModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>ADD MATCH</h2>
-                <button class="close-btn" onclick="toggleModal(false)">&times;</button>
-            </div>
-            
-            <div class="form-group">
-                <label>Tournament Name *</label>
-                <input type="text" class="form-control" placeholder="E.G. FFEB UNDERDOG SERIES">
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
-                <div class="form-group">
-                    <label>Match Type / Round</label>
-                    <select class="form-control">
-                        <option>Select type...</option>
-                        <option>Qualifier</option>
-                        <option>Semi-Finals</option>
-                        <option>Finals</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Top Qualify</label>
-                    <select class="form-control">
-                        <option>Select...</option>
-                        <option>Top 1</option>
-                        <option>Top 3</option>
-                        <option>Top 5</option>
-                    </select>
-                </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
-                <div class="form-group">
-                    <label>Date *</label>
-                    <input type="date" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label>Maps</label>
-                    <select class="form-control">
-                        <option>3 Maps</option>
-                        <option>1 Map</option>
-                        <option>2 Maps</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Status</label>
-                <select class="form-control">
-                    <option>Upcoming</option>
-                    <option>Running</option>
-                    <option>Completed</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Investment Amount (৳) <span class="badge-manager">MANAGER ONLY</span></label>
-                <input type="number" class="form-control" value="0">
-            </div>
-
-            <div class="modal-actions">
-                <button class="btn-cancel" onclick="toggleModal(false)">CANCEL</button>
-                <button class="btn-submit" onclick="alert('Match Added Successfully!')">ADD MATCH</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bottom Navigation Bar -->
-    <div class="bottom-nav">
-        <button class="nav-item active">
-            <div>🎛️</div>
-            <div>DASHBOARD</div>
-        </button>
-        <button class="nav-item">
-            <div>📈</div>
-            <div>FINANCE</div>
-        </button>
-        <button class="nav-item">
-            <div>⚙️</div>
-            <div>SETTINGS</div>
-        </button>
-        <button class="nav-item">
-            <div>🔧</div>
-            <div>TOOLS</div>
-        </button>
-    </div>
-
-    <script>
-        function toggleModal(show) {
-            const modal = document.getElementById('matchModal');
-            if (show) {
-                modal.classList.add('active');
-            } else {
-                modal.classList.remove('active');
-            }
-        }
-    </script>
-</body>
-            </html>
-    
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#04050a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="ESH" />
+    <script type="module" crossorigin src="/assets/index-wTPRYOaW.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Sk3r_sRw.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
