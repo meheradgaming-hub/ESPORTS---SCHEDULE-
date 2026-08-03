@@ -1,245 +1,270 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEO FLASH - Tournament Hub</title>
+    <title>Neo Flash Team - Tournament Schedule</title>
     <style>
         :root {
             --bg-color: #0f172a;
             --card-bg: #1e293b;
-            --accent-color: #00f2fe;
-            --highlight-color: #f59e0b;
-            --text-color: #f8fafc;
+            --accent-color: #f59e0b;
+            --text-main: #f8fafc;
             --text-muted: #94a3b8;
+            --border-color: #334155;
         }
 
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
             background-color: var(--bg-color);
-            color: var(--text-color);
+            color: var(--text-main);
             padding: 20px;
-            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
         }
 
         header {
             text-align: center;
-            padding: 30px 10px;
-            background: linear-gradient(135deg, #1e1b4b, #311b92);
-            border-radius: 15px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 25px;
         }
 
         header h1 {
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             color: var(--accent-color);
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
 
         header p {
             color: var(--text-muted);
-            font-size: 1.1rem;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
+            font-size: 0.95rem;
+            margin-top: 5px;
         }
 
         .card {
             background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
 
-        .card-header {
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-
-        .card-title {
-            font-size: 1.4rem;
-            color: #fff;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 15px;
-            background: rgba(0,0,0,0.2);
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 0.95rem;
-        }
-
-        .info-item span {
+        .section-title {
+            font-size: 1.1rem;
             color: var(--accent-color);
-            font-weight: bold;
-        }
-
-        .notice-box {
-            background: rgba(245, 158, 11, 0.15);
-            border-left: 4px solid var(--highlight-color);
-            padding: 10px;
             margin-bottom: 15px;
-            font-size: 0.9rem;
-            border-radius: 0 6px 6px 0;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th, td {
-            padding: 10px 12px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            font-size: 0.95rem;
-        }
-
-        th {
-            background-color: rgba(255,255,255,0.05);
-            color: var(--accent-color);
-        }
-
-        tr.my-team {
-            background-color: rgba(0, 242, 254, 0.2);
-            font-weight: bold;
+        .match-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
             border-left: 4px solid var(--accent-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
         }
 
-        tr.my-team td {
-            color: #fff;
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
-        .badge {
-            background-color: var(--highlight-color);
-            color: #000;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.75rem;
+        .match-title {
+            font-size: 1.1rem;
             font-weight: bold;
-            margin-left: 5px;
+            color: var(--text-main);
         }
 
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            color: var(--text-muted);
+        .match-time-badge {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-color);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .match-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
             font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .match-details span strong {
+            color: var(--text-main);
+        }
+
+        .rule-text {
+            background: rgba(245, 158, 11, 0.05);
+            border: 1px dashed var(--accent-color);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+
+        .team-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            list-style: none;
+        }
+
+        .team-list li {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .team-list li span {
+            color: var(--accent-color);
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .loading {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 20px;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>NEO FLASH ESPORTS</h1>
-        <p>Official Tournament Schedule & Live Match Updates</p>
-    </header>
-
     <div class="container">
+        <header>
+            <h1>Neo Flash Team Tournaments</h1>
+            <p>Live Squad Schedule & Match Updates</p>
+        </header>
 
-        <!-- Tournament 1 -->
+        <!-- Match Schedule Section -->
         <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">🏆 MANGROVE PRO SERIES S-1</h2>
+            <h2 class="section-title">🎮 Live Match Schedules</h2>
+            <div id="schedule-container">
+                <div class="loading">Loading schedules from Google Sheets...</div>
             </div>
-
-            <div class="info-grid">
-                <div class="info-item">📅 Date: <span>03-08-2026</span></div>
-                <div class="info-item">⏰ ID Pass: <span>9:00 PM</span></div>
-                <div class="info-item">🚀 Start: <span>9:10 PM</span></div>
-                <div class="info-item">🗺️ Maps: <span>B-P-K-N-S</span></div>
-            </div>
-
-            <div class="notice-box">
-                ⚠️ <strong>Rules:</strong> Top 5 qualify for Grand Finale. 6th, 7th & 8th move to Survival Round.
-            </div>
-
-            <h3>Team List & Slots</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Slot</th>
-                        <th>Team Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>1</td><td>TITAN ESPORTS CLUB</td></tr>
-                    <tr class="my-team"><td>2</td><td>NEO FLASH x NO GRAVITY <span class="badge">MY TEAM</span></td></tr>
-                    <tr><td>3</td><td>The Reapers</td></tr>
-                    <tr><td>4</td><td>STRAW HATS</td></tr>
-                    <tr><td>5</td><td>JAWBREAKERS</td></tr>
-                    <tr><td>6</td><td>REFLEX UNITED</td></tr>
-                    <tr><td>7</td><td>TEAM ELECTRO</td></tr>
-                    <tr><td>8</td><td>REWAKENED RULERS</td></tr>
-                    <tr><td>9</td><td>TEAM INFINITY</td></tr>
-                    <tr><td>10</td><td>NO RULES</td></tr>
-                    <tr><td>11</td><td>NOVA KNIGHTS</td></tr>
-                    <tr><td>12</td><td>FROM THE FUTURE</td></tr>
-                </tbody>
-            </table>
         </div>
 
-        <!-- Tournament 2 -->
+        <!-- Team List Section -->
         <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">🏆 PRO ARENA S1</h2>
-            </div>
-
-            <div class="notice-box" style="border-color: var(--accent-color); background: rgba(0, 242, 254, 0.1);">
-                📌 <strong>Group:</strong> Community Teams / Community Slot
-            </div>
-
-            <h3>Team List & Slots</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Slot</th>
-                        <th>Team Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>1</td><td>STRIKE AGENTS</td></tr>
-                    <tr><td>2</td><td>B4X</td></tr>
-                    <tr><td>3</td><td>A1</td></tr>
-                    <tr><td>4</td><td>GS ESPORTS</td></tr>
-                    <tr><td>5</td><td>ALPHA STRIKE</td></tr>
-                    <tr><td>6</td><td>LOF ESPORTS</td></tr>
-                    <tr><td>7</td><td>UFD ESP</td></tr>
-                    <tr class="my-team"><td>8</td><td>NEO FLASH <span class="badge">MY TEAM</span></td></tr>
-                    <tr><td>9</td><td>TEAM CALYX</td></tr>
-                    <tr><td>10</td><td>Midnight Hawks</td></tr>
-                    <tr><td>11</td><td>PARADISE</td></tr>
-                    <tr><td>12</td><td>ROGUE NATION</td></tr>
-                </tbody>
-            </table>
+            <h2 class="section-title">👥 Participating Teams</h2>
+            <ul class="team-list" id="team-list-container">
+                <div class="loading">Loading teams...</div>
+            </ul>
         </div>
-
     </div>
 
-    <footer>
-        <p>© 2026 NEO FLASH Esports | Managed via GitHub Pages</p>
-    </footer>
+    <script>
+        // 👉 আপনার গুগল শিটের Publish করা CSV লিংক দুটি এখানে বসাবেন:
+        const MATCHES_CSV_URL = 'https://docs.google.com/spreadsheets/d/131X2ZImv5RlYtUFqwZiuxm1cBxSGhiZrMY85akibdso/export?format=csv&gid=0';
+        const TEAMS_CSV_URL = 'YOUR_TEAMS_CSV_LINK_HERE';
 
+        async function fetchGoogleSheetData() {
+            try {
+                if(MATCHES_CSV_URL.includes('http')) {
+                    const matchRes = await fetch(MATCHES_CSV_URL);
+                    const matchText = await matchRes.text();
+                    parseMatches(matchText);
+                } else {
+                    document.getElementById('schedule-container').innerHTML = '<p style="color:#ef4444; text-align:center;">Please update your Matches CSV link in the code!</p>';
+                }
+
+                if(TEAMS_CSV_URL.includes('http')) {
+                    const teamRes = await fetch(TEAMS_CSV_URL);
+                    const teamText = await teamRes.text();
+                    parseTeams(teamText);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        function parseCSV(str) {
+            const arr = [];
+            let row = [''];
+            let col = 0;
+            let quote = false;
+            for (let i = 0; i < str.length; i++) {
+                let c = str[i], next = str[i + 1];
+                if (quote) {
+                    if (c === '"' && next === '"') { row[col] += '"'; i++; }
+                    else if (c === '"') { quote = false; }
+                    else { row[col] += c; }
+                } else {
+                    if (c === '"') { quote = true; }
+                    else if (c === ',') { row[++col] = ''; }
+                    else if (c === '\r' && next === '\n') { i++; arr.push(row); row = ['']; col = 0; }
+                    else if (c === '\n' || c === '\r') { arr.push(row); row = ['']; col = 0; }
+                    else { row[col] += c; }
+                }
+            }
+            if (row.length > 1 || row[0] !== '') arr.push(row);
+            return arr;
+        }
+
+        function parseMatches(csvText) {
+            const rows = parseCSV(csvText);
+            let html = '';
+            for (let i = 1; i < rows.length; i++) {
+                let r = rows[i];
+                if (r.length >= 5 && r[0]) {
+                    html += `
+                        <div class="match-card">
+                            <div class="match-header">
+                                <span class="match-title">🔥 ${r[0]}</span>
+                                <span class="match-time-badge">⏰ ${r[1]}</span>
+                            </div>
+                            <div class="match-details">
+                                <span>Map/Type: <strong>${r[2]}</strong></span>
+                                <span>Timing: <strong>${r[3]}</strong></span>
+                            </div>
+                            <div class="rule-text">
+                                🏆 <strong>Status/Rules:</strong> ${r[4]}
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            document.getElementById('schedule-container').innerHTML = html || '<p style="color:var(--text-muted)">No matches available.</p>';
+        }
+
+        function parseTeams(csvText) {
+            const rows = parseCSV(csvText);
+            let html = '';
+            let count = 1;
+            for (let i = 1; i < rows.length; i++) {
+                let r = rows[i];
+                if (r[0] && r[0].trim() !== '') {
+                    let num = count < 10 ? '0' + count : count;
+                    html += `<li><span>${num}</span> ${r[0].trim()}</li>`;
+                    count++;
+                }
+            }
+            document.getElementById('team-list-container').innerHTML = html || '<p style="color:var(--text-muted)">No teams available.</p>';
+        }
+
+        fetchGoogleSheetData();
+    </script>
 </body>
-    </html>
-                                                            
+</html>
