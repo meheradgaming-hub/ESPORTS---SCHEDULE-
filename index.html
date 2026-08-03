@@ -3,589 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neo Flash Schedule</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Mangrove Pro Series Season 1 - Schedule</title>
     <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: #0b0f17;
-            color: #ffffff;
-            padding-bottom: 90px;
-        }
-
-        /* Top Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            background: #111823;
-            border-bottom: 1px solid #1e293b;
-        }
-
-        .brand-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #161e2e;
-            padding: 8px 15px;
-            border-radius: 8px;
-            border: 1px solid #2d3748;
-        }
-
-        .brand-logo i { color: #f59e0b; }
-        .brand-logo h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 15px;
-            font-weight: 700;
-        }
-        .brand-logo span {
-            font-size: 10px;
-            color: #94a3b8;
-            border-left: 1px solid #475569;
-            padding-left: 8px;
-        }
-
-        .header-right {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .trial-badge {
-            background: #dc2626;
-            color: white;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: 4px;
-        }
-
-        .add-match-btn {
-            background: #f59e0b;
-            color: #000;
-            border: none;
-            padding: 8px 14px;
-            font-weight: 600;
-            font-size: 12px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-        }
-
-        /* Views Pages */
-        .page-view {
-            display: none;
-        }
-        .page-view.active-page {
-            display: block;
-        }
-
-        /* Stats Cards */
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            padding: 15px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, #131b2e 0%, #0d1321 100%);
-            border: 1px solid #1f293d;
-            border-radius: 12px;
-            padding: 15px 10px;
-        }
-
-        .stat-card.total { border-top: 3px solid #94a3b8; }
-        .stat-card.today { border-top: 3px solid #3b82f6; }
-        .stat-card.upcoming { border-top: 3px solid #f59e0b; }
-
-        .stat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            color: #94a3b8;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .stat-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        /* Search & Filters */
-        .search-box { padding: 0 15px 15px 15px; }
-        .search-input-wrapper {
-            position: relative;
-            background: #111823;
-            border: 1px solid #1e293b;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            padding: 0 12px;
-        }
-        .search-input-wrapper i { color: #64748b; font-size: 14px; }
-        .search-input-wrapper input {
-            width: 100%;
-            background: transparent;
-            border: none;
-            padding: 12px 10px;
-            color: #fff;
-            font-size: 13px;
-            outline: none;
-        }
-
-        .filter-tabs {
-            display: flex;
-            gap: 8px;
-            padding: 0 15px 15px 15px;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
-        .filter-tabs::-webkit-scrollbar { display: none; }
-
-        .tab {
-            background: #111823;
-            border: 1px solid #1e293b;
-            color: #94a3b8;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-        .tab.active {
-            background: #f59e0b;
-            color: #000;
-            border-color: #f59e0b;
-        }
-
-        /* Match Card */
-        .match-card-container { padding: 0 15px 20px 15px; display: flex; flex-direction: column; gap: 10px; }
-        .match-card {
-            background: #111823;
-            border: 1px solid #1e293b;
-            border-radius: 12px;
-            display: flex;
-            overflow: hidden;
-            position: relative;
-        }
-        .match-time-col {
-            background: #f59e0b;
-            color: #000;
-            width: 90px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 15px 5px;
-            font-weight: 700;
-            text-align: center;
-        }
-        .match-time-col span:first-child { font-size: 10px; text-transform: uppercase; }
-        .match-time-col span:last-child { font-size: 14px; font-family: 'Orbitron', sans-serif; }
-
-        .match-details { padding: 12px 15px; flex: 1; }
-        .match-header-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-        .match-title { font-family: 'Orbitron', sans-serif; font-size: 14px; font-weight: 700; }
-        .match-badge { background: #1e293b; color: #94a3b8; font-size: 10px; padding: 2px 8px; border-radius: 4px; }
-        .match-subtext { font-size: 11px; color: #64748b; margin-bottom: 8px; }
-        .match-tag {
-            background: rgba(59, 130, 246, 0.1);
-            color: #3b82f6;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 8px;
-        }
-        .match-meta-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 5px;
-            font-size: 10px;
-            color: #94a3b8;
-            border-top: 1px solid #1e293b;
-            padding-top: 8px;
-        }
-        .match-meta-item div:last-child { color: #fff; font-weight: 600; margin-top: 2px; }
-
-        .delete-match-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 10px;
-            cursor: pointer;
-        }
-
-        /* Settings Page Styles */
-        .settings-container { padding: 15px; }
-        .section-box {
-            background: #111823;
-            border: 1px solid #1e293b;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #f59e0b;
-            margin-bottom: 5px;
-        }
-        .section-desc { font-size: 11px; color: #64748b; margin-bottom: 15px; }
-
-        .tag-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 10px;
-        }
-        .deletable-tag {
-            background: #161e2e;
-            border: 1px solid #2d3748;
-            color: #fff;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 11px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .deletable-tag i { color: #ef4444; cursor: pointer; }
-
-        .input-group-row {
-            display: flex;
-            gap: 10px;
-        }
-        .input-group-row input {
-            flex: 1;
-            background: #0b0f17;
-            border: 1px solid #1e293b;
-            border-radius: 6px;
-            padding: 10px;
-            color: #fff;
-            font-size: 12px;
-            outline: none;
-        }
-        .action-add-btn {
-            background: #f59e0b;
-            border: none;
-            width: 40px;
-            border-radius: 6px;
-            color: #000;
-            font-size: 16px;
-            cursor: pointer;
-            font-weight: 700;
-        }
-
-        /* Modal Overlay */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            display: none;
-            justify-content: center;
-            align-items: flex-end;
-            z-index: 2000;
-        }
-        .modal-content {
-            background: #111823;
-            border-top: 1px solid #1e293b;
-            width: 100%;
-            max-height: 90vh;
-            border-radius: 16px 16px 0 0;
+            background-color: var(--bg-color);
+            color: var(--text-main);
             padding: 20px;
-            overflow-y: auto;
         }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
             margin-bottom: 15px;
         }
-        .modal-header h3 { font-family: 'Orbitron', sans-serif; color: #f59e0b; font-size: 15px; }
-        .close-modal { background: none; border: none; color: #fff; font-size: 18px; cursor: pointer; }
 
-        .form-control-group { margin-bottom: 12px; }
-        .form-control-group label { display: block; font-size: 11px; color: #94a3b8; margin-bottom: 5px; }
-        .form-control-group select, .form-control-group input {
-            width: 100%;
-            background: #0b0f17;
-            border: 1px solid #1e293b;
-            padding: 10px;
-            color: #fff;
-            border-radius: 6px;
-            font-size: 12px;
-            outline: none;
+        .info-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
         }
 
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
+        .info-item span {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.85rem;
         }
-        .modal-actions button {
-            flex: 1;
-            padding: 10px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 12px;
-            cursor: pointer;
-            border: none;
+
+        .info-item strong {
+            font-size: 1.05rem;
+            color: var(--text-main);
         }
-        .btn-cancel { background: #1e293b; color: #fff; }
-        .btn-submit { background: #f59e0b; color: #000; }
 
-        /* Footer Branding */
-        .footer-branding { text-align: center; margin: 20px 0; font-size: 11px; color: #64748b; }
-        .footer-branding span { color: #f59e0b; font-weight: 600; }
+        .section-title {
+            font-size: 1.1rem;
+            color: var(--accent-color);
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
 
-        /* Bottom Navbar */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0; left: 0;
-            width: 100%;
-            background: #0d1321;
-            border-top: 1px solid #1e293b;
+        .rule-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px dashed var(--accent-color);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .team-list {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            padding: 10px 0;
-            z-index: 1000;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px;
+            list-style: none;
         }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: #64748b;
-            font-size: 10px;
-            font-weight: 600;
-            gap: 4px;
-            cursor: pointer;
+
+        .team-list li {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
         }
-        .nav-item i { font-size: 16px; }
-        .nav-item.active { color: #f59e0b; }
+
+        .team-list li span {
+            color: var(--accent-color);
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
-    <div class="header">
-        <div class="brand-logo">
-            <i class="fa-solid fa-gamepad"></i>
-            <div><h1>NEO FLASH</h1></div>
-            <span>SCHEDULE</span>
-        </div>
-        <div class="header-right">
-            <div class="trial-badge">TRIAL</div>
-            <button class="add-match-btn" id="openModalBtn">
-                <i class="fa-solid fa-plus"></i> ADD MATCH
-            </button>
-        </div>
-    </div>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>Mangrove Pro Series</h1>
+            <p>Season 1 - Official Match Schedule & Teams</p>
+        </header>
 
-    <!-- ================= DASHBOARD PAGE ================= -->
-    <div id="dashboardPage" class="page-view active-page">
-        <!-- Stats Section -->
-        <div class="stats-container">
-            <div class="stat-card total">
-                <div class="stat-header"><span>TOTAL</span><i class="fa-solid fa-trophy"></i></div>
-                <div class="stat-value" id="totalCount">0</div>
+        <!-- Match Info Card -->
+        <div class="card">
+            <h2 class="section-title">Match Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span>Date</span>
+                    <strong>03-08-2026</strong>
+                </div>
+                <div class="info-item">
+                    <span>Match Time</span>
+                    <strong>09:00 PM</strong>
+                </div>
+                <div class="info-item">
+                    <span>ID & Pass Time</span>
+                    <strong>09:00 PM</strong>
+                </div>
+                <div class="info-item">
+                    <span>Match Start</span>
+                    <strong>09:10 PM</strong>
+                </div>
             </div>
-            <div class="stat-card today">
-                <div class="stat-header"><span>TODAY</span><i class="fa-regular fa-calendar"></i></div>
-                <div class="stat-value" id="todayCount">0</div>
-            </div>
-            <div class="stat-card upcoming">
-                <div class="stat-header"><span>UPCOMING</span><i class="fa-solid fa-swords"></i></div>
-                <div class="stat-value" id="upcomingCount">0</div>
-            </div>
-        </div>
-
-        <!-- Search Bar -->
-        <div class="search-box">
-            <div class="search-input-wrapper">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="searchInput" placeholder="Search tournaments...">
+            <div class="info-item" style="margin-top: 10px;">
+                <span>Map Rotation</span>
+                <strong>B - P - K - N - S (Bermuda, Purgatory, Kalahari, Nexterra, Solaria)</strong>
             </div>
         </div>
 
-        <!-- Filter Tabs -->
-        <div class="filter-tabs">
-            <div class="tab active" data-filter="all">ALL <span id="allBadge">0</span></div>
-            <div class="tab" data-filter="Upcoming">UPCOMING</div>
-            <div class="tab" data-filter="N.T.U">N.T.U</div>
-            <div class="tab" data-filter="QUALIFIED">QUALIFIED</div>
-            <div class="tab" data-filter="WIN">WIN</div>
-            <div class="tab" data-filter="LOSS">LOSS</div>
-            <div class="tab" data-filter="FINISHED">FINISHED</div>
-        </div>
-
-        <!-- Match Cards Wrapper -->
-        <div class="match-card-container" id="matchListContainer">
-            <!-- Dynamic Matches Will Render Here -->
-        </div>
-    </div>
-
-    <!-- ================= SETTINGS PAGE ================= -->
-    <div id="settingsPage" class="page-view">
-        <div class="settings-container">
-            <div class="section-box">
-                <div class="section-title"><i class="fa-solid fa-bullseye"></i> MATCH TYPES</div>
-                <div class="section-desc">এগুলো Add Match এ ড্রপডাউন হিসেবে আসবে।</div>
-                <div class="input-group-row">
-                    <input type="text" id="newMatchTypeInput" placeholder="Type & press Enter...">
-                    <button class="action-add-btn" id="addMatchTypeBtn">+</button>
-                </div>
-                <div class="tag-container" id="matchTypesContainer"></div>
+        <!-- Qualification Rules -->
+        <div class="card">
+            <h2 class="section-title">Qualification Status</h2>
+            <div class="rule-box">
+                🏆 <strong>Top 5 Teams:</strong> Qualify directly for the Grand Finale!<br>
+                ⚡ <strong>6th, 7th & 8th Position:</strong> Move to the Survival Round.
             </div>
         </div>
-    </div>
 
-    <!-- ================= ADD MATCH MODAL ================= -->
-    <div class="modal-overlay" id="addMatchModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>ADD MATCH</h3>
-                <button class="close-modal" id="closeModalBtn">&times;</button>
-            </div>
-            <form id="addMatchForm">
-                <div class="form-control-group">
-                    <label>Tournament Name</label>
-                    <input type="text" id="tourneyName" placeholder="e.g. Mangrove" required>
-                </div>
-                <div class="form-control-group">
-                    <label>Match Type</label>
-                    <select id="tourneyTypeSelect"></select>
-                </div>
-                <div class="form-control-group">
-                    <label>Status</label>
-                    <select id="tourneyStatus">
-                        <option value="Upcoming">Upcoming</option>
-                        <option value="N.T.U">N.T.U</option>
-                        <option value="QUALIFIED">QUALIFIED</option>
-                        <option value="WIN">WIN</option>
-                        <option value="LOSS">LOSS</option>
-                        <option value="FINISHED">FINISHED</option>
-                    </select>
-                </div>
-                <div class="form-control-group">
-                    <label>Match Time</label>
-                    <input type="text" id="tourneyTime" value="9:00 PM" required>
-                </div>
-                <div class="form-control-group">
-                    <label>Date</label>
-                    <input type="text" id="tourneyDate" value="AUG 4" required>
-                </div>
-                <div class="form-control-group">
-                    <label>Maps Count</label>
-                    <input type="text" id="tourneyMaps" value="6 MAPS" required>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn-cancel" id="cancelModalBtn">CANCEL</button>
-                    <button type="submit" class="btn-submit">ADD MATCH</button>
-                </div>
-            </form>
+        <!-- Team List Card -->
+        <div class="card">
+            <h2 class="section-title">Participating Teams (12)</h2>
+            <ul class="team-list">
+                <li><span>01</span> TITAN ESPORTS CLUB</li>
+                <li><span>02</span> NEO FLASH x NO GRAVITY</li>
+                <li><span>03</span> The Reapers</li>
+                <li><span>04</span> STRAW HATS</li>
+                <li><span>05</span> JAWBREAKERS</li>
+                <li><span>06</span> REFLEX UNITED</li>
+                <li><span>07</span> TEAM ELECTRO</li>
+                <li><span>08</span> REAWAKENED RULERS</li>
+                <li><span>09</span> TEAM INFINITY</li>
+                <li><span>10</span> NO RULES</li>
+                <li><span>11</span> NOVA KNIGHTS</li>
+                <li><span>12</span> FROM THE FUTURE</li>
+            </ul>
         </div>
+
+        <footer>
+            &copy; 2026 Neo Flash Team. All rights reserved.
+        </footer>
     </div>
 
-    <!-- Footer Branding -->
-    <div class="footer-branding">
-        DESIGNED & DEVELOPED BY <span>MD MAKIN HASAN</span>
-    </div>
-
-    <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-        <a class="nav-item active" data-target="dashboardPage">
-            <i class="fa-solid fa-table-cells-large"></i>
-            <span>DASHBOARD</span>
-        </a>
-        <a class="nav-item" data-target="financePage">
-            <i class="fa-solid fa-chart-line"></i>
-            <span>FINANCE</span>
-        </a>
-        <a class="nav-item" data-target="settingsPage">
-            <i class="fa-solid fa-gear"></i>
-            <span>SETTINGS</span>
-        </a>
-        <a class="nav-item" data-target="toolsPage">
-            <i class="fa-solid fa-screwdriver-wrench"></i>
-            <span>TOOLS</span>
-        </a>
-    </div>
-
-    <script>
-        // Page Switching Logic
-        const navItems = document.querySelectorAll('.bottom-nav .nav-item');
-        const pageViews = document.querySelectorAll('.page-view');
-
-        navItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                const target = item.getAttribute('data-target');
-                if(!target || document.getElementById(target) == null) return;
-                
-                navItems.forEach(nav => nav.classList.remove('active'));
-                item.classList.add('active');
-
-                pageViews.forEach(page => page.classList.remove('active-page'));
-                document.getElementById(target).classList.add('active-page');
-            });
-        });
-
-        // Modal Functionality
-        const modal = document.getElementById('addMatchModal');
-        const openModalBtn = document.getElementById('openModalBtn');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const cancelModalBtn = document.getElementById('cancelModalBtn');
-
-        openModalBtn.addEventListener('click', () => {
-            modal.style.display = 'flex';
-        });
-
-        closeModalBtn.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
-
-        cancelModalBtn.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
-
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.style.display = 'none';
-            }
-        });
-
-        // Dynamic State Data & LocalStorage
-        let matchTypes = JSON.parse(localStorage.getItem('matchTypes')) || ['ROUND 1', 'QUARTER FINAL', 'SEMI FINAL', 'FINAL', 'INVITED PHASE'];
-        let matches = JSON.parse(localStorage.getItem('matches')) || [];
-
-        function renderMatchTypes() {
-            const container = document.getElementById('matchTypesContainer');
-            const selectDrop
+</body>
+    </html>
+    
