@@ -141,6 +141,18 @@
 
         .transaction-history {
             margin-top: 15px;
+            max-height: 350px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        /* Scrollbar styles for history */
+        .transaction-history::-webkit-scrollbar {
+            width: 6px;
+        }
+        .transaction-history::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 10px;
         }
 
         .history-header {
@@ -149,6 +161,11 @@
             margin-bottom: 15px;
             text-transform: uppercase;
             letter-spacing: 1px;
+            position: sticky;
+            top: 0;
+            background: var(--card-bg);
+            padding: 5px 0;
+            z-index: 10;
         }
 
         .transaction-item {
@@ -194,7 +211,7 @@
         .amt-income { color: var(--income-color); }
         .amt-expense { color: var(--expense-color); }
 
-        /* --- Match Cards Styles (Previous) --- */
+        /* --- Match Cards Styles --- */
         .history-title {
             color: #9ca3af;
             border-bottom-color: #374151;
@@ -237,6 +254,14 @@
             border-radius: 8px;
             font-size: 0.85rem;
             font-weight: 700;
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        .history-card .match-time-badge {
+            background: rgba(107, 114, 128, 0.15);
+            color: #9ca3af;
+            border: 1px solid rgba(107, 114, 128, 0.3);
         }
         .match-details {
             display: grid;
@@ -274,12 +299,12 @@
     <div class="container">
         <header>
             <h1 id="squad-title">NEO FLASH TEAM</h1>
-            <p>Schedule & Fund Management</p>
+            <p>Schedule & Auto Fund Management</p>
         </header>
 
-        <!-- Fund Management Section -->
+        <!-- Auto Fund Management Section -->
         <div class="card finance-card">
-            <h2 class="section-title finance-title">💳 Fund Management</h2>
+            <h2 class="section-title finance-title">💳 Fund Management (Auto)</h2>
             
             <div class="balance-container">
                 <div class="balance-label">Current Balance</div>
@@ -301,9 +326,9 @@
             </div>
 
             <div class="transaction-history">
-                <div class="history-header" id="history-count">TRANSACTION HISTORY (0)</div>
+                <div class="history-header" id="history-count">AUTO TRANSACTION HISTORY (0)</div>
                 <div id="finance-container">
-                    <div class="loading">Loading finances...</div>
+                    <div class="loading">Loading automated finances...</div>
                 </div>
             </div>
         </div>
@@ -326,28 +351,19 @@
     </div>
 
     <script>
-        // 👉 ১. ম্যাচের শিট লিংক (আগেরটা)
-        const MATCHES_CSV_URL = 'https://docs.google.com/spreadsheets/d/131X2ZImv5R1yTUfQwZiuxm1cBxSGhiZrMY85akibdso/export?format=csv&gid=0';
-        
-        // 👉 ২. নতুন ফিন্যান্স (আয়-ব্যয়) ট্যাবের লিংক (এখানে নতুন ট্যাবের gid বসাবেন)
-        const FINANCE_CSV_URL = 'https://docs.google.com/spreadsheets/d/131X2ZImv5R1yTUfQwZiuxm1cBxSGhiZrMY85akibdso/export?format=csv&gid=123456789'; // gid পরিবর্তন করুন
+        // 👉 আপনার গুগল শিটের Publish করা মূল (Matches) CSV লিংকটি এখানে বসাবেন:
+        const MATCHES_CSV_URL = 'https://docs.google.com/spreadsheets/d/1ntxtcAxIKwYPBzBsaZJbqGHCTpLBHLZ0uQfolmBtuuo/export?format=csv&gid=0';
 
         async function fetchGoogleSheetData() {
             try {
-                // Fetch Matches
                 if(MATCHES_CSV_URL.includes('http')) {
                     const matchRes = await fetch(MATCHES_CSV_URL);
                     const matchText = await matchRes.text();
-                    parseMatches(matchText);
-                }
-
-                // Fetch Finances
-                if(FINANCE_CSV_URL.includes('http') && !FINANCE_CSV_URL.includes('123456789')) {
-                    const financeRes = await fetch(FINANCE_CSV_URL);
-                    const financeText = await financeRes.text();
-                    parseFinance(financeText);
+                    parseMatchesAndFinances(matchText);
                 } else {
-                    document.getElementById('finance-container').innerHTML = '<p style="color:var(--text-muted); text-align:center;">Finance tab not linked yet. Update FINANCE_CSV_URL.</p>';
+                    const errorMsg = '<p style="color:#ef4444; text-align:center;">Please update your Matches CSV link!</p>';
+                    document.getElementById('live-container').innerHTML = errorMsg;
+                    document.getElementById('history-container').innerHTML = errorMsg;
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -377,91 +393,79 @@
             return arr;
         }
 
-        // --- ফিন্যান্স (Finance) পার্স করার কোড ---
-        function parseFinance(csvText) {
+        function parseMatchesAndFinances(csvText) {
             const rows = parseCSV(csvText);
-            let html = '';
-            let totalIncome = 0;
-            let totalExpense = 0;
-            let transactionCount = 0;
-
-            // শিটের নিচ থেকে উপরের দিকে লুপ চালাচ্ছি যাতে নতুন ট্রানজেকশন উপরে দেখায়
-            for (let i = rows.length - 1; i >= 1; i--) {
-                let r = rows[i];
-                if (r.length >= 3 && r[1]) { // Date এবং Description থাকলে
-                    let date = r[0] || '';
-                    let description = r[1] || '';
-                    let type = (r[2] || '').toLowerCase().trim(); // Income নাকি Expense
-                    let amount = parseFloat(r[3]) || 0; // টাকার পরিমাণ
-
-                    let isIncome = type === 'income';
-                    
-                    if (isIncome) {
-                        totalIncome += amount;
-                    } else if (type === 'expense') {
-                        totalExpense += amount;
-                    } else {
-                        continue; // Income বা Expense না লেখা থাকলে স্কিপ করবে
-                    }
-
-                    transactionCount++;
-                    let icon = isIncome ? '💰' : '🧾';
-                    let sign = isIncome ? '+' : '-';
-                    let itemClass = isIncome ? 'income' : 'expense';
-                    let amountClass = isIncome ? 'amt-income' : 'amt-expense';
-
-                    html += `
-                        <div class="transaction-item ${itemClass}">
-                            <div class="trans-left">
-                                <div class="trans-icon">${icon}</div>
-                                <div>
-                                    <div class="trans-desc">${description}</div>
-                                    <div class="trans-date">${date}</div>
-                                </div>
-                            </div>
-                            <div class="trans-amount ${amountClass}">${sign}৳${amount}</div>
-                        </div>
-                    `;
-                }
-            }
-
-            let currentBalance = totalIncome - totalExpense;
-            let netChangeColor = currentBalance >= 0 ? 'var(--income-color)' : 'var(--expense-color)';
-            let netChangeSign = currentBalance >= 0 ? '+' : '';
-
-            // Update UI
-            document.getElementById('total-balance').innerText = `৳${currentBalance}`;
-            document.getElementById('total-income').innerText = `+৳${totalIncome}`;
-            document.getElementById('total-expense').innerText = `-৳${totalExpense}`;
             
-            let netChangeEl = document.getElementById('net-change');
-            netChangeEl.innerText = `${netChangeSign}৳${currentBalance}`;
-            netChangeEl.style.color = netChangeColor;
-
-            document.getElementById('history-count').innerText = `TRANSACTION HISTORY (${transactionCount})`;
-            document.getElementById('finance-container').innerHTML = html || '<p style="color:var(--text-muted); text-align:center;">No transactions found.</p>';
-        }
-
-        // --- ম্যাচ পার্স করার কোড (আগেরটাই) ---
-        function parseMatches(csvText) {
-            const rows = parseCSV(csvText);
+            // Match variables
             let liveHtml = '';
             let historyHtml = '';
             
-            for (let i = 1; i < rows.length; i++) {
+            // Finance variables
+            let totalIncome = 0;
+            let totalExpense = 0;
+            let financeHtml = '';
+            let transactionCount = 0;
+            
+            // লুপটি নিচ থেকে উপরে চালাচ্ছি যাতে নতুন ট্রানজেকশন/ম্যাচ উপরে শো করে
+            for (let i = rows.length - 1; i >= 1; i--) {
                 let r = rows[i];
                 if (r.length >= 1 && r[0]) {
                     let tournamentName = r[0] || '';       
                     let matchTypeRound = r[1] || '';       
                     let topQualify = r[2] || '';           
-                    let date = r[3] || '';                 
+                    let date = r[3] || 'Unknown Date';                 
                     let maps = r[4] || '';                 
                     let matchTime = r[5] || '';            
                     let startTime = r[6] || '';            
                     let status = r[7] || '';               
-                    let investmentAmount = r[8] || '';     
-                    let notes = r[9] || '';                
+                    let investmentAmount = parseFloat(r[8]) || 0; // Column I (Expense)
+                    let prizeAmount = parseFloat(r[9]) || 0;      // Column J (Income)
+                    let notes = r[10] || '';                      // Column K (Notes)
 
+                    // ------------------------------------------------
+                    // 1. অটোম্যাটিক ফিন্যান্স ক্যালকুলেশন (Auto Finance)
+                    // ------------------------------------------------
+                    let matchShortName = tournamentName ? tournamentName.substring(0, 20) + '...' : 'Match';
+                    
+                    // প্রাইজ জিতলে (Income)
+                    if (prizeAmount > 0) {
+                        totalIncome += prizeAmount;
+                        transactionCount++;
+                        financeHtml += `
+                            <div class="transaction-item income">
+                                <div class="trans-left">
+                                    <div class="trans-icon">🏆</div>
+                                    <div>
+                                        <div class="trans-desc">Prize: ${tournamentName}</div>
+                                        <div class="trans-date">${date}</div>
+                                    </div>
+                                </div>
+                                <div class="trans-amount amt-income">+৳${prizeAmount}</div>
+                            </div>
+                        `;
+                    }
+
+                    // ইনভেস্টমেন্ট করলে (Expense)
+                    if (investmentAmount > 0) {
+                        totalExpense += investmentAmount;
+                        transactionCount++;
+                        financeHtml += `
+                            <div class="transaction-item expense">
+                                <div class="trans-left">
+                                    <div class="trans-icon">🎮</div>
+                                    <div>
+                                        <div class="trans-desc">Entry: ${tournamentName}</div>
+                                        <div class="trans-date">${date}</div>
+                                    </div>
+                                </div>
+                                <div class="trans-amount amt-expense">-৳${investmentAmount}</div>
+                            </div>
+                        `;
+                    }
+
+                    // ------------------------------------------------
+                    // 2. ম্যাচ কার্ড তৈরি (Live vs History)
+                    // ------------------------------------------------
                     let statusLower = status.toLowerCase();
                     let isHistory = statusLower.includes('completed') || statusLower.includes('finished') || statusLower.includes('played');
                     let cardClass = isHistory ? 'match-card history-card' : 'match-card live-card';
@@ -478,7 +482,8 @@
                                 ${startTime ? `<span>Start Time: <strong>${startTime}</strong></span>` : ''}
                                 ${topQualify ? `<span>Top Qualify: <strong>${topQualify}</strong></span>` : ''}
                                 ${status ? `<span>Status: <strong style="${isHistory ? 'color:#9ca3af;' : 'color:#fbbf24;'}">${status}</strong></span>` : ''}
-                                ${investmentAmount ? `<span>Investment: <strong style="${isHistory ? 'color:#9ca3af;' : 'color:#34d399;'}">৳${investmentAmount}</strong></span>` : ''}
+                                ${investmentAmount > 0 ? `<span>Investment: <strong style="color:var(--expense-color);">৳${investmentAmount}</strong></span>` : ''}
+                                ${prizeAmount > 0 ? `<span>Prize Won: <strong style="color:var(--income-color);">৳${prizeAmount}</strong></span>` : ''}
                             </div>
                             ${notes ? `
                                 <div class="rule-text" style="${isHistory ? 'border-color:#4b5563; background:rgba(75,85,99,0.1); color:#9ca3af;' : ''}">
@@ -493,12 +498,22 @@
                 }
             }
             
+            // Update Matches UI
             document.getElementById('live-container').innerHTML = liveHtml || '<p style="color:var(--text-muted); text-align:center;">No upcoming matches.</p>';
             document.getElementById('history-container').innerHTML = historyHtml || '<p style="color:var(--text-muted); text-align:center;">No match history.</p>';
-        }
 
-        fetchGoogleSheetData();
-    </script>
-</body>
-                            </html>
-                        
+            // Update Finance UI
+            let currentBalance = totalIncome - totalExpense;
+            let netChangeColor = currentBalance >= 0 ? 'var(--income-color)' : 'var(--expense-color)';
+            let netChangeSign = currentBalance >= 0 ? '+' : '';
+
+            document.getElementById('total-balance').innerText = `৳${currentBalance}`;
+            document.getElementById('total-income').innerText = `+৳${totalIncome}`;
+            document.getElementById('total-expense').innerText = `-৳${totalExpense}`;
+            
+            let netChangeEl = document.getElementById('net-change');
+            netChangeEl.innerText = `${netChangeSign}৳${currentBalance}`;
+            netChangeEl.style.color = netChangeColor;
+
+            document.getElementById('history-count').innerText = `AUTO TRANSACTION HISTORY (${transactionCount})`;
+            document.getElementById('finance-cont
