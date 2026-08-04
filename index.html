@@ -28,10 +28,123 @@
             min-height: 100vh;
         }
 
-        .container { max-width: 900px; margin: 0 auto; }
+        /* Login Overlay Style */
+        #login-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(7, 11, 25, 0.95);
+            backdrop-filter: blur(15px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .login-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 30px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+        }
+
+        .login-box h2 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-box p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px; }
+
+        .login-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            outline: none;
+            text-align: center;
+        }
+
+        .login-input:focus { border-color: #38bdf8; }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to right, #f59e0b, #ec4899);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .login-btn:hover { opacity: 0.9; }
+        .error-msg { color: #ef4444; font-size: 0.85rem; margin-top: 10px; display: none; }
+
+        /* Main Dashboard Screen */
+        #dashboard-content { display: none; }
+
+        .container { max-width: 900px; margin: 0 auto; position: relative; }
 
         header {
             text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-top-btns {
+            position: absolute; right: 0; top: 0; display: flex; gap: 8px;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 6px 12px; border-radius: 6px;
+            font-size: 0.8rem; cursor: pointer; font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .action-btn:hover { background: rgba(255, 255, 255, 0.15); }
+
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.4);
+            color: var(--expense-color);
+        }
+
+        /* Dynamic Logo Styles */
+        .logo-container {
+            width: 90px;
+            height: 90px;
+            margin-bottom: 12px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #f59e0b;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         header h1 {
@@ -61,12 +174,31 @@
             text-align: center; padding: 20px 0; border-bottom: 1px dashed var(--border-color); margin-bottom: 20px;
         }
         .balance-label { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
-        .balance-amount { font-size: 3.5rem; font-weight: 800; color: var(--balance-color); text-shadow: 0 0 15px rgba(56, 189, 248, 0.4); margin-bottom: 15px; }
+        .balance-amount { font-size: 3.5rem; font-weight: 800; text-shadow: 0 0 15px rgba(56, 189, 248, 0.4); margin-bottom: 15px; }
 
-        .stats-row { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-        .stat-item { text-align: center; background: rgba(0,0,0,0.2); padding: 12px 18px; border-radius: 10px; min-width: 130px; border: 1px solid rgba(255,255,255,0.05); }
+        .stats-row { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        .stat-item { text-align: center; background: rgba(0,0,0,0.2); padding: 10px 14px; border-radius: 10px; min-width: 120px; border: 1px solid rgba(255,255,255,0.05); }
         .stat-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase;}
-        .stat-value { font-size: 1.2rem; font-weight: 700; }
+        .stat-value { font-size: 1.1rem; font-weight: 700; }
+
+        /* Transaction History */
+        .transaction-history { max-height: 350px; overflow-y: auto; padding-right: 5px; margin-top: 10px; }
+        .transaction-history::-webkit-scrollbar { width: 6px; }
+        .transaction-history::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
+
+        .transaction-item {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(0, 0, 0, 0.25); padding: 12px 15px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid;
+        }
+        .transaction-item.income { border-left-color: var(--income-color); }
+        .transaction-item.expense { border-left-color: var(--expense-color); }
+        .transaction-item.payout { border-left-color: var(--payout-color); }
+
+        .trans-left { display: flex; align-items: center; gap: 12px; }
+        .trans-icon { font-size: 1.3rem; }
+        .trans-desc { font-size: 0.95rem; color: var(--text-main); font-weight: 600; }
+        .trans-date { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+        .trans-amount { font-size: 1.05rem; font-weight: 700; }
 
         /* Player Grid */
         .player-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
@@ -77,9 +209,7 @@
         .player-name { font-weight: 700; font-size: 1.05rem; color: var(--text-main); }
         .player-amount { font-weight: 800; font-size: 1.1rem; color: var(--payout-color); }
 
-        .match-card {
-            border: 1px solid var(--card-border); border-radius: 12px; padding: 18px; margin-bottom: 18px;
-        }
+        .match-card { border: 1px solid var(--card-border); border-radius: 12px; padding: 18px; margin-bottom: 18px; }
         .live-card { background: linear-gradient(145deg, rgba(31, 41, 55, 0.4), rgba(17, 24, 39, 0.8)); border-left: 5px solid #f59e0b; }
         .history-card { background: linear-gradient(145deg, rgba(17, 24, 39, 0.4), rgba(17, 24, 39, 0.6)); border-left: 5px solid #6b7280; opacity: 0.8; }
         
@@ -95,70 +225,161 @@
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1 id="squad-title">NEO FLASH TEAM</h1>
-            <p>Schedule & Auto Fund Management</p>
-        </header>
+    <!-- Login Screen -->
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2>🔒 RESTRICTED ACCESS</h2>
+            <p>Please enter password to view dashboard</p>
+            <input type="password" id="pass-input" class="login-input" placeholder="Enter Password" onkeypress="handleKey(event)">
+            <button class="login-btn" onclick="checkPassword()">UNLOCK DASHBOARD</button>
+            <div id="error-msg" class="error-msg">Incorrect Password! Try again.</div>
+        </div>
+    </div>
 
-        <!-- Fund Management Section -->
-        <div class="card finance-card">
-            <h2 class="section-title finance-title">💳 Fund Management (Auto)</h2>
-            <div class="balance-container">
-                <div class="balance-label">Current Fund Balance</div>
-                <div class="balance-amount" id="total-balance">৳0</div>
-                <div class="stats-row">
-                    <div class="stat-item">
-                        <div class="stat-label">Total Prize Won</div>
-                        <div class="stat-value" id="total-income" style="color: var(--income-color);">+৳0</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Total Entry Fee</div>
-                        <div class="stat-value" id="total-expense" style="color: var(--expense-color);">-৳0</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Total Player Paid</div>
-                        <div class="stat-value" id="total-player-paid" style="color: var(--payout-color);">-৳0</div>
+    <!-- Dashboard Main View -->
+    <div id="dashboard-content">
+        <div class="container">
+            <header>
+                <div class="header-top-btns">
+                    <button class="action-btn" onclick="updateLogo()">🖼️ Change Logo</button>
+                    <button class="action-btn logout-btn" onclick="logout()">🔒 Lock</button>
+                </div>
+                
+                <!-- Dynamic Team Logo -->
+                <div class="logo-container" id="logo-box" style="display: none;">
+                    <img id="team-logo" src="" alt="Team Logo">
+                </div>
+
+                <h1 id="squad-title">NEO FLASH TEAM</h1>
+                <p>Schedule & Auto Fund Management</p>
+            </header>
+
+            <!-- Fund Management Section -->
+            <div class="card finance-card">
+                <h2 class="section-title finance-title">💳 Net Profit / Loss (Auto)</h2>
+                <div class="balance-container">
+                    <div class="balance-label">TOTAL NET BALANCE</div>
+                    <div class="balance-amount" id="total-balance">৳0</div>
+                    
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <div class="stat-label">Total Won</div>
+                            <div class="stat-value" id="total-income" style="color: var(--income-color);">+৳0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Entry Fees</div>
+                            <div class="stat-value" id="total-expense" style="color: var(--expense-color);">-৳0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Player Paid</div>
+                            <div class="stat-value" id="total-player-paid" style="color: var(--payout-color);">-৳0</div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Player Earnings Section -->
-        <div class="card">
-            <h2 class="section-title" style="color: #ec4899; border-bottom-color: #831843;">👤 Player Payments Ledger</h2>
-            <div id="player-container" class="player-grid">
-                <div class="loading">Loading players data...</div>
+            <!-- All Transactions Ledger -->
+            <div class="card">
+                <h2 class="section-title" style="color: #38bdf8; border-bottom-color: #0369a1;">📊 All Transaction History</h2>
+                <div class="transaction-history" id="transaction-container">
+                    <div class="loading">Loading transactions...</div>
+                </div>
             </div>
-        </div>
 
-        <!-- Live Matches Section -->
-        <div class="card">
-            <h2 class="section-title">🎮 Live & Upcoming Matches</h2>
-            <div id="live-container">
-                <div class="loading">Loading schedules...</div>
+            <!-- Player Earnings Section -->
+            <div class="card">
+                <h2 class="section-title" style="color: #ec4899; border-bottom-color: #831843;">👤 Player Payments Summary</h2>
+                <div id="player-container" class="player-grid">
+                    <div class="loading">Loading players data...</div>
+                </div>
             </div>
-        </div>
 
-        <!-- Match History Section -->
-        <div class="card">
-            <h2 class="section-title" style="color: #9ca3af; border-bottom-color: #374151;">📜 Match History</h2>
-            <div id="history-container">
-                <div class="loading">Loading history...</div>
+            <!-- Live Matches Section -->
+            <div class="card">
+                <h2 class="section-title">🎮 Live & Upcoming Matches</h2>
+                <div id="live-container">
+                    <div class="loading">Loading schedules...</div>
+                </div>
+            </div>
+
+            <!-- Match History Section -->
+            <div class="card">
+                <h2 class="section-title" style="color: #9ca3af; border-bottom-color: #374151;">📜 Match History</h2>
+                <div id="history-container">
+                    <div class="loading">Loading history...</div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // ১. মেইন ট্যাবের লিংক (Matches)
+        // এখানে আপনার ড্যাশবোর্ডের পাসওয়ার্ড পরিবর্তন করে দিতে পারেন (ডিফল্ট: 1234)
+        const DEFAULT_PASSWORD = '11225588'; 
+
         const MATCHES_CSV_URL = 'https://docs.google.com/spreadsheets/d/1ntxtcAxIKwYPBzBsaZJbqGHCTpLBHLZ0uQfolmBtuuo/export?format=csv&gid=0';
-        
-        // ২. দ্বিতীয় ট্যাবের লিংক (PLAYERS) - gid=0 সরিয়ে আপনার PLAYERS ট্যাবের gid বসাবেন
         const PLAYERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/1ntxtcAxIKwYPBzBsaZJbqGHCTpLBHLZ0uQfolmBtuuo/export?format=csv&gid=999617109';
+
+        let globalTransactions = [];
+
+        // Logo Logic
+        function loadLogo() {
+            const savedLogo = localStorage.getItem('team_logo_url');
+            if (savedLogo) {
+                document.getElementById('team-logo').src = savedLogo;
+                document.getElementById('logo-box').style.display = 'flex';
+            } else {
+                document.getElementById('logo-box').style.display = 'none';
+            }
+        }
+
+        function updateLogo() {
+            const currentLogo = localStorage.getItem('team_logo_url') || '';
+            const newUrl = prompt('Enter Image URL for Team Logo (or leave blank to remove):', currentLogo);
+            
+            if (newUrl !== null) {
+                if (newUrl.trim() === '') {
+                    localStorage.removeItem('team_logo_url');
+                } else {
+                    localStorage.setItem('team_logo_url', newUrl.trim());
+                }
+                loadLogo();
+            }
+        }
+
+        // Password Authentication Logic
+        function checkPassword() {
+            const inputVal = document.getElementById('pass-input').value;
+            if (inputVal === DEFAULT_PASSWORD) {
+                sessionStorage.setItem('isLoggedIn', 'true');
+                showDashboard();
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        }
+
+        function handleKey(e) {
+            if (e.key === 'Enter') checkPassword();
+        }
+
+        function logout() {
+            sessionStorage.removeItem('isLoggedIn');
+            location.reload();
+        }
+
+        function showDashboard() {
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('dashboard-content').style.display = 'block';
+            loadLogo();
+            initDashboard();
+        }
+
+        // Auto check login session on load
+        if (sessionStorage.getItem('isLoggedIn') === 'true') {
+            showDashboard();
+        }
 
         async function initDashboard() {
             try {
-                // ১. ফেচ প্লেয়ার ডেটা
                 let totalPlayerPayout = 0;
                 try {
                     const playerRes = await fetch(PLAYERS_CSV_URL);
@@ -167,16 +388,16 @@
                         totalPlayerPayout = parsePlayerData(playerText);
                     }
                 } catch (e) {
-                    console.log("Player sheet not connected yet or empty.");
-                    document.getElementById('player-container').innerHTML = '<p style="color:var(--text-muted);">Add PLAYERS tab in Google Sheets to see details.</p>';
+                    document.getElementById('player-container').innerHTML = '<p style="color:var(--text-muted);">PLAYERS tab not linked yet.</p>';
                 }
 
-                // ২. ফেচ ম্যাচ ডেটা
                 const matchRes = await fetch(MATCHES_CSV_URL);
                 if (matchRes.ok) {
                     const matchText = await matchRes.text();
                     parseMatchesData(matchText, totalPlayerPayout);
                 }
+
+                renderTransactions();
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -202,7 +423,6 @@
             return arr;
         }
 
-        // প্লেয়ারদের হিসাব প্রসেসিং
         function parsePlayerData(csvText) {
             const rows = parseCSV(csvText);
             const playerTotals = {};
@@ -213,10 +433,20 @@
                 if (r.length >= 2 && r[0]) {
                     let pName = r[0].trim();
                     let pAmount = parseFloat(r[1]) || 0;
+                    let pNote = r[2] || 'Player Payout';
 
                     if (!playerTotals[pName]) playerTotals[pName] = 0;
                     playerTotals[pName] += pAmount;
                     grandTotalPaid += pAmount;
+
+                    if (pAmount > 0) {
+                        globalTransactions.push({
+                            type: 'payout',
+                            title: `Paid to ${pName}`,
+                            date: pNote,
+                            amount: pAmount
+                        });
+                    }
                 }
             }
 
@@ -224,9 +454,7 @@
             for (let name in playerTotals) {
                 playerHtml += `
                     <div class="player-card">
-                        <div>
-                            <div class="player-name">👤 ${name}</div>
-                        </div>
+                        <div class="player-name">👤 ${name}</div>
                         <div class="player-amount">৳${playerTotals[name]}</div>
                     </div>
                 `;
@@ -236,7 +464,6 @@
             return grandTotalPaid;
         }
 
-        // ম্যাচ ও ওভারঅল ফান্ডের হিসাব
         function parseMatchesData(csvText, playerPayoutTotal) {
             const rows = parseCSV(csvText);
             let liveHtml = '';
@@ -244,66 +471,6 @@
             let totalIncome = 0;
             let totalExpense = 0;
 
-            for (let i = rows.length - 1; i >= 1; i--) {
-                let r = rows[i];
-                if (r.length >= 1 && r[0]) {
-                    let tournamentName = r[0] || '';       
-                    let matchTypeRound = r[1] || '';       
-                    let topQualify = r[2] || '';           
-                    let date = r[3] || 'Upcoming';                 
-                    let maps = r[4] || '';                 
-                    let matchTime = r[5] || '';            
-                    let startTime = r[6] || '';            
-                    let status = r[7] || '';               
-                    let investmentAmount = parseFloat(r[8]) || 0; 
-                    let prizeAmount = parseFloat(r[9]) || 0;      
-                    let notes = r[10] || '';                      
+            const registeredTournaments = new Set();
 
-                    totalIncome += prizeAmount;
-                    totalExpense += investmentAmount;
-
-                    let statusLower = status.toLowerCase();
-                    let isHistory = statusLower.includes('completed') || statusLower.includes('finished') || statusLower.includes('played');
-                    let cardClass = isHistory ? 'match-card history-card' : 'match-card live-card';
-
-                    let cardContent = `
-                        <div class="${cardClass}">
-                            <div class="match-header">
-                                <span class="match-title">🔥 ${tournamentName} ${matchTypeRound ? `<span style="font-size:0.9rem; font-weight:normal;">(${matchTypeRound})</span>` : ''}</span>
-                                <span class="match-time-badge" style="${isHistory ? 'background: rgba(107, 114, 128, 0.15); color: #9ca3af;' : ''}">📅 ${date}</span>
-                            </div>
-                            <div class="match-details">
-                                ${maps ? `<span>Maps: <strong>${maps}</strong></span>` : ''}
-                                ${matchTime ? `<span>Match Time: <strong>${matchTime}</strong></span>` : ''}
-                                ${startTime ? `<span>Start Time: <strong>${startTime}</strong></span>` : ''}
-                                ${topQualify ? `<span>Top Qualify: <strong>${topQualify}</strong></span>` : ''}
-                                ${status ? `<span>Status: <strong style="${isHistory ? 'color:#9ca3af;' : 'color:#fbbf24;'}">${status}</strong></span>` : ''}
-                                ${investmentAmount > 0 ? `<span>Investment: <strong style="color:var(--expense-color);">৳${investmentAmount}</strong></span>` : ''}
-                                ${prizeAmount > 0 ? `<span>Prize Won: <strong style="color:var(--income-color);">৳${prizeAmount}</strong></span>` : ''}
-                            </div>
-                            ${notes ? `<div class="rule-text" style="${isHistory ? 'border-color:#4b5563; background:rgba(75,85,99,0.1); color:#9ca3af;' : ''}">📝 <strong>Notes:</strong> ${notes}</div>` : ''}
-                        </div>
-                    `;
-
-                    if (isHistory) historyHtml += cardContent;
-                    else liveHtml += cardContent;
-                }
-            }
-            
-            document.getElementById('live-container').innerHTML = liveHtml || '<p style="color:var(--text-muted); text-align:center;">No upcoming matches.</p>';
-            document.getElementById('history-container').innerHTML = historyHtml || '<p style="color:var(--text-muted); text-align:center;">No match history.</p>';
-
-            // অটোম্যাটিক হিসাব সংমিশ্রণ: (জেতা টাকা - ইনভেস্টমেন্ট - প্লেয়ারদের দেওয়া টাকা)
-            let netBalance = totalIncome - totalExpense - playerPayoutTotal;
-
-            document.getElementById('total-balance').innerText = `৳${netBalance}`;
-            document.getElementById('total-income').innerText = `+৳${totalIncome}`;
-            document.getElementById('total-expense').innerText = `-৳${totalExpense}`;
-            document.getElementById('total-player-paid').innerText = `-৳${playerPayoutTotal}`;
-        }
-
-        initDashboard();
-    </script>
-</body>
-    </html>
-    
+            for (let 
