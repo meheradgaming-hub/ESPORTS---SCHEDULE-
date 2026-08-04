@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neo Flash Team - Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neo Flash Team</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#070b19">
     <style>
         :root {
             --bg-color: #070b19;
@@ -18,104 +21,129 @@
             --balance-color: #38bdf8; 
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+        }
 
         body {
             background-color: var(--bg-color);
             background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, var(--bg-color) 70%);
             color: var(--text-main);
-            padding: 25px 15px;
+            padding: 15px 10px;
             min-height: 100vh;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
-        .container { max-width: 900px; margin: 0 auto; }
+        .container { max-width: 900px; margin: 0 auto; position: relative; }
 
         header {
-            text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color);
+            text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-container {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #f59e0b;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         header h1 {
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             background: linear-gradient(to right, #fbbf24, #f59e0b, #ec4899);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-transform: uppercase; letter-spacing: 2px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 1.5px; font-weight: 800;
         }
 
-        header p { color: var(--text-muted); font-size: 1rem; margin-top: 8px; }
+        header p { color: var(--text-muted); font-size: 0.85rem; margin-top: 4px; }
 
         .card {
             background-color: var(--card-bg); border: 1px solid var(--card-border);
-            border-radius: 16px; padding: 24px; margin-bottom: 25px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); backdrop-filter: blur(10px);
+            border-radius: 14px; padding: 18px; margin-bottom: 18px;
+            box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.5); backdrop-filter: blur(10px);
         }
 
         .section-title {
-            font-size: 1.2rem; color: #fbbf24; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
-            text-transform: uppercase; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;
+            font-size: 1.05rem; color: #fbbf24; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;
+            text-transform: uppercase; border-bottom: 2px solid var(--border-color); padding-bottom: 8px;
         }
 
         .finance-card { border: 1px solid #1e3a8a; box-shadow: 0 0 20px rgba(56, 189, 248, 0.1); }
         .finance-title { color: var(--balance-color); border-bottom-color: #1e3a8a; }
 
         .balance-container {
-            text-align: center; padding: 20px 0; border-bottom: 1px dashed var(--border-color); margin-bottom: 20px;
+            text-align: center; padding: 15px 0; border-bottom: 1px dashed var(--border-color); margin-bottom: 15px;
         }
-        .balance-label { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
-        .balance-amount { font-size: 3.5rem; font-weight: 800; text-shadow: 0 0 15px rgba(56, 189, 248, 0.4); margin-bottom: 15px; }
+        .balance-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+        .balance-amount { font-size: 2.8rem; font-weight: 800; text-shadow: 0 0 15px rgba(56, 189, 248, 0.4); margin-bottom: 12px; }
 
-        .stats-row { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-        .stat-item { text-align: center; background: rgba(0,0,0,0.2); padding: 10px 14px; border-radius: 10px; min-width: 120px; border: 1px solid rgba(255,255,255,0.05); }
-        .stat-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase;}
-        .stat-value { font-size: 1.1rem; font-weight: 700; }
-
-        /* Transaction History */
-        .transaction-history { max-height: 350px; overflow-y: auto; padding-right: 5px; margin-top: 10px; }
-        .transaction-history::-webkit-scrollbar { width: 6px; }
-        .transaction-history::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
+        .stats-row { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .stat-item { text-align: center; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 8px; min-width: 100px; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-label { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase;}
+        .stat-value { font-size: 1rem; font-weight: 700; }
 
         .transaction-item {
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(0, 0, 0, 0.25); padding: 12px 15px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid;
+            background: rgba(0, 0, 0, 0.25); padding: 10px 12px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid;
         }
         .transaction-item.income { border-left-color: var(--income-color); }
         .transaction-item.expense { border-left-color: var(--expense-color); }
         .transaction-item.payout { border-left-color: var(--payout-color); }
 
-        .trans-left { display: flex; align-items: center; gap: 12px; }
-        .trans-icon { font-size: 1.3rem; }
-        .trans-desc { font-size: 0.95rem; color: var(--text-main); font-weight: 600; }
-        .trans-date { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
-        .trans-amount { font-size: 1.05rem; font-weight: 700; }
+        .trans-left { display: flex; align-items: center; gap: 10px; }
+        .trans-icon { font-size: 1.1rem; }
+        .trans-desc { font-size: 0.9rem; color: var(--text-main); font-weight: 600; }
+        .trans-date { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+        .trans-amount { font-size: 0.95rem; font-weight: 700; }
 
-        /* Player Grid */
-        .player-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+        .player-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-top: 10px; }
         .player-card {
-            background: rgba(0, 0, 0, 0.3); border: 1px solid var(--card-border); padding: 15px; border-radius: 12px;
+            background: rgba(0, 0, 0, 0.3); border: 1px solid var(--card-border); padding: 12px; border-radius: 10px;
             display: flex; justify-content: space-between; align-items: center;
         }
-        .player-name { font-weight: 700; font-size: 1.05rem; color: var(--text-main); }
-        .player-amount { font-weight: 800; font-size: 1.1rem; color: var(--payout-color); }
+        .player-name { font-weight: 700; font-size: 0.95rem; color: var(--text-main); }
+        .player-amount { font-weight: 800; font-size: 1rem; color: var(--payout-color); }
 
-        .match-card {
-            border: 1px solid var(--card-border); border-radius: 12px; padding: 18px; margin-bottom: 18px;
-        }
-        .live-card { background: linear-gradient(145deg, rgba(31, 41, 55, 0.4), rgba(17, 24, 39, 0.8)); border-left: 5px solid #f59e0b; }
-        .history-card { background: linear-gradient(145deg, rgba(17, 24, 39, 0.4), rgba(17, 24, 39, 0.6)); border-left: 5px solid #6b7280; opacity: 0.8; }
+        .match-card { border: 1px solid var(--card-border); border-radius: 10px; padding: 14px; margin-bottom: 12px; }
+        .live-card { background: linear-gradient(145deg, rgba(31, 41, 55, 0.4), rgba(17, 24, 39, 0.8)); border-left: 4px solid #f59e0b; }
+        .history-card { background: linear-gradient(145deg, rgba(17, 24, 39, 0.4), rgba(17, 24, 39, 0.6)); border-left: 4px solid #6b7280; opacity: 0.8; }
         
-        .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
-        .match-title { font-size: 1.2rem; font-weight: 700; }
-        .match-time-badge { padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+        .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+        .match-title { font-size: 1.05rem; font-weight: 700; }
+        .match-time-badge { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
         
-        .match-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; font-size: 0.95rem; color: var(--text-muted); margin-bottom: 12px; background: rgba(0, 0, 0, 0.2); padding: 12px; border-radius: 8px; }
+        .match-details { display: grid; grid-template-columns: 1fr; gap: 6px; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px; background: rgba(0, 0, 0, 0.2); padding: 10px; border-radius: 8px; }
         .match-details span { display: flex; justify-content: space-between; }
-        .rule-text { background: rgba(236, 72, 153, 0.08); border: 1px dashed rgba(236, 72, 153, 0.4); padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; margin-top: 10px; }
-        .loading { text-align: center; color: var(--text-muted); padding: 20px; font-style: italic; }
+        .rule-text { background: rgba(236, 72, 153, 0.08); border: 1px dashed rgba(236, 72, 153, 0.4); padding: 8px 10px; border-radius: 6px; font-size: 0.8rem; margin-top: 8px; }
+        .loading { text-align: center; color: var(--text-muted); padding: 15px; font-style: italic; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <header>
+            <div class="logo-container" id="logo-box" style="display: none;">
+                <img id="team-logo" src="" alt="Team Logo">
+            </div>
+
             <h1 id="squad-title">NEO FLASH TEAM</h1>
             <p>Schedule & Auto Fund Management</p>
         </header>
@@ -147,7 +175,7 @@
         <!-- All Transactions Ledger -->
         <div class="card">
             <h2 class="section-title" style="color: #38bdf8; border-bottom-color: #0369a1;">📊 All Transaction History</h2>
-            <div class="transaction-history" id="transaction-container">
+            <div id="transaction-container">
                 <div class="loading">Loading transactions...</div>
             </div>
         </div>
@@ -156,7 +184,7 @@
         <div class="card">
             <h2 class="section-title" style="color: #ec4899; border-bottom-color: #831843;">👤 Player Payments Summary</h2>
             <div id="player-container" class="player-grid">
-                <div class="loading">Loading players data...</div>
+                <div class="loading" style="font-style:normal;">No separate player payment sheet linked.</div>
             </div>
         </div>
 
@@ -179,32 +207,39 @@
 
     <script>
         const MATCHES_CSV_URL = 'https://docs.google.com/spreadsheets/d/1ntxtcAxIKwYPBzBsaZJbqGHCTpLBHLZ0uQfolmBtuuo/export?format=csv&gid=0';
-        const PLAYERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/1ntxtcAxIKwYPBzBsaZJbqGHCTpLBHLZ0uQfolmBtuuo/export?format=csv&gid=999617109';
 
         let globalTransactions = [];
 
+        function loadLogo() {
+            const savedLogo = localStorage.getItem('team_logo_url');
+            if (savedLogo) {
+                document.getElementById('team-logo').src = savedLogo;
+                document.getElementById('logo-box').style.display = 'flex';
+            } else {
+                document.getElementById('logo-box').style.display = 'none';
+            }
+        }
+
+        window.onload = function() {
+            loadLogo();
+            initDashboard();
+        };
+
         async function initDashboard() {
             try {
+                globalTransactions = []; 
                 let totalPlayerPayout = 0;
-                try {
-                    const playerRes = await fetch(PLAYERS_CSV_URL);
-                    if (playerRes.ok) {
-                        const playerText = await playerRes.text();
-                        totalPlayerPayout = parsePlayerData(playerText);
-                    }
-                } catch (e) {
-                    document.getElementById('player-container').innerHTML = '<p style="color:var(--text-muted);">PLAYERS tab not linked yet.</p>';
-                }
 
                 const matchRes = await fetch(MATCHES_CSV_URL);
-                if (matchRes.ok) {
-                    const matchText = await matchRes.text();
-                    parseMatchesData(matchText, totalPlayerPayout);
-                }
+                if (!matchRes.ok) throw new Error('Failed to fetch Google Sheet CSV data.');
+                
+                const matchText = await matchRes.text();
+                parseMatchesData(matchText, totalPlayerPayout);
 
                 renderTransactions();
             } catch (error) {
                 console.error('Error:', error);
+                document.getElementById('live-container').innerHTML = `<p style="color:var(--expense-color); text-align:center;">Error loading data! Please make sure the Google Sheet is shared as "Anyone with the link can view".</p>`;
             }
         }
 
@@ -228,47 +263,6 @@
             return arr;
         }
 
-        function parsePlayerData(csvText) {
-            const rows = parseCSV(csvText);
-            const playerTotals = {};
-            let grandTotalPaid = 0;
-
-            for (let i = 1; i < rows.length; i++) {
-                let r = rows[i];
-                if (r.length >= 2 && r[0]) {
-                    let pName = r[0].trim();
-                    let pAmount = parseFloat(r[1]) || 0;
-                    let pNote = r[2] || 'Player Payout';
-
-                    if (!playerTotals[pName]) playerTotals[pName] = 0;
-                    playerTotals[pName] += pAmount;
-                    grandTotalPaid += pAmount;
-
-                    if (pAmount > 0) {
-                        globalTransactions.push({
-                            type: 'payout',
-                            title: `Paid to ${pName}`,
-                            date: pNote,
-                            amount: pAmount
-                        });
-                    }
-                }
-            }
-
-            let playerHtml = '';
-            for (let name in playerTotals) {
-                playerHtml += `
-                    <div class="player-card">
-                        <div class="player-name">👤 ${name}</div>
-                        <div class="player-amount">৳${playerTotals[name]}</div>
-                    </div>
-                `;
-            }
-
-            document.getElementById('player-container').innerHTML = playerHtml || '<p style="color:var(--text-muted);">No player payments recorded yet.</p>';
-            return grandTotalPaid;
-        }
-
         function parseMatchesData(csvText, playerPayoutTotal) {
             const rows = parseCSV(csvText);
             let liveHtml = '';
@@ -276,27 +270,25 @@
             let totalIncome = 0;
             let totalExpense = 0;
 
-            // একই টুর্নামেন্টের এন্ট্রি ফি বারবার না কাটার জন্য
             const registeredTournaments = new Set();
 
             for (let i = rows.length - 1; i >= 1; i--) {
                 let r = rows[i];
-                if (r.length >= 1 && r[0]) {
-                    let tournamentName = r[0].trim() || '';       
-                    let matchTypeRound = r[1] || '';       
-                    let topQualify = r[2] || '';           
-                    let date = r[3] || 'Upcoming';                 
-                    let maps = r[4] || '';                 
-                    let matchTime = r[5] || '';            
-                    let startTime = r[6] || '';            
-                    let status = r[7] || '';               
+                if (r.length >= 1 && r[0] && r[0].trim() !== '') {
+                    let tournamentName = r[0] ? r[0].trim() : '';       
+                    let matchTypeRound = r[1] ? r[1].trim() : '';       
+                    let topQualify = r[2] ? r[2].trim() : '';           
+                    let date = r[3] ? r[3].trim() : 'Upcoming';                 
+                    let maps = r[4] ? r[4].trim() : '';                 
+                    let matchTime = r[5] ? r[5].trim() : '';            
+                    let startTime = r[6] ? r[6].trim() : '';            
+                    let status = r[7] ? r[7].trim() : '';               
                     let investmentAmount = parseFloat(r[8]) || 0; 
                     let prizeAmount = parseFloat(r[9]) || 0;      
-                    let notes = r[10] || '';                      
+                    let notes = r[10] ? r[10].trim() : '';                      
 
                     totalIncome += prizeAmount;
 
-                    // যদি এই টুর্নামেন্টের এন্ট্রি ফি আগে ধরা না হয়ে থাকে
                     let tourKey = tournamentName.toLowerCase();
                     if (investmentAmount > 0) {
                         if (!registeredTournaments.has(tourKey)) {
@@ -322,13 +314,13 @@
                     }
 
                     let statusLower = status.toLowerCase();
-                    let isHistory = statusLower.includes('completed') || statusLower.includes('finished') || statusLower.includes('played');
+                    let isHistory = statusLower.includes('complete') || statusLower.includes('finished') || statusLower.includes('played');
                     let cardClass = isHistory ? 'match-card history-card' : 'match-card live-card';
 
                     let cardContent = `
                         <div class="${cardClass}">
                             <div class="match-header">
-                                <span class="match-title">🔥 ${tournamentName} ${matchTypeRound ? `<span style="font-size:0.9rem; font-weight:normal;">(${matchTypeRound})</span>` : ''}</span>
+                                <span class="match-title">🔥 ${tournamentName} ${matchTypeRound ? `<span style="font-size:0.8rem; font-weight:normal;">(${matchTypeRound})</span>` : ''}</span>
                                 <span class="match-time-badge" style="${isHistory ? 'background: rgba(107, 114, 128, 0.15); color: #9ca3af;' : ''}">📅 ${date}</span>
                             </div>
                             <div class="match-details">
@@ -400,4 +392,13 @@
                                     <div class="trans-date">${t.date}</div>
                                 </div>
                             </div>
-                            <div class
+                            <div class="trans-amount" style="${amountClass}">${sign}৳${t.amount}</div>
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('transaction-container').innerHTML = html;
+        }
+    </script>
+</body>
+</html>
