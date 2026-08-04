@@ -13,9 +13,9 @@
             --text-muted: #9ca3af;
             --border-color: #1f2937;
             --card-border: #374151;
-            --income-color: #34d399; /* Green for profit */
-            --expense-color: #ef4444; /* Red for loss */
-            --balance-color: #38bdf8; /* Blue for balance */
+            --income-color: #34d399; 
+            --expense-color: #ef4444; 
+            --balance-color: #38bdf8; 
         }
 
         * {
@@ -86,7 +86,6 @@
             padding-bottom: 10px;
         }
 
-        /* --- Fund Management Section Styles --- */
         .finance-card {
             border: 1px solid #1e3a8a;
             box-shadow: 0 0 20px rgba(56, 189, 248, 0.1);
@@ -126,18 +125,9 @@
             gap: 40px;
         }
 
-        .stat-item {
-            text-align: center;
-        }
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 5px;
-        }
-        .stat-value {
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
+        .stat-item { text-align: center; }
+        .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px; }
+        .stat-value { font-size: 1.2rem; font-weight: 700; }
 
         .transaction-history {
             margin-top: 15px;
@@ -146,14 +136,8 @@
             padding-right: 5px;
         }
 
-        /* Scrollbar styles for history */
-        .transaction-history::-webkit-scrollbar {
-            width: 6px;
-        }
-        .transaction-history::-webkit-scrollbar-thumb {
-            background: #374151;
-            border-radius: 10px;
-        }
+        .transaction-history::-webkit-scrollbar { width: 6px; }
+        .transaction-history::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
 
         .history-header {
             font-size: 0.95rem;
@@ -182,40 +166,16 @@
         .transaction-item.income { border-left-color: var(--income-color); }
         .transaction-item.expense { border-left-color: var(--expense-color); }
 
-        .trans-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .trans-icon {
-            font-size: 1.5rem;
-        }
-
-        .trans-desc {
-            font-size: 1rem;
-            color: var(--text-main);
-            font-weight: 600;
-        }
-
-        .trans-date {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-top: 3px;
-        }
-
-        .trans-amount {
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
+        .trans-left { display: flex; align-items: center; gap: 15px; }
+        .trans-icon { font-size: 1.5rem; }
+        .trans-desc { font-size: 1rem; color: var(--text-main); font-weight: 600; }
+        .trans-date { font-size: 0.8rem; color: var(--text-muted); margin-top: 3px; }
+        .trans-amount { font-size: 1.1rem; font-weight: 700; }
+        
         .amt-income { color: var(--income-color); }
         .amt-expense { color: var(--expense-color); }
 
-        /* --- Match Cards Styles --- */
-        .history-title {
-            color: #9ca3af;
-            border-bottom-color: #374151;
-        }
+        .history-title { color: #9ca3af; border-bottom-color: #374151; }
         .match-card {
             border: 1px solid var(--card-border);
             border-radius: 12px;
@@ -245,10 +205,7 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        .match-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
+        .match-title { font-size: 1.2rem; font-weight: 700; }
         .match-time-badge {
             padding: 6px 12px;
             border-radius: 8px;
@@ -274,10 +231,7 @@
             padding: 12px;
             border-radius: 8px;
         }
-        .match-details span {
-            display: flex;
-            justify-content: space-between;
-        }
+        .match-details span { display: flex; justify-content: space-between; }
         .rule-text {
             background: rgba(236, 72, 153, 0.08);
             border: 1px dashed rgba(236, 72, 153, 0.4);
@@ -286,12 +240,7 @@
             font-size: 0.9rem;
             margin-top: 10px;
         }
-        .loading {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 30px;
-            font-style: italic;
-        }
+        .loading { text-align: center; color: var(--text-muted); padding: 30px; font-style: italic; }
     </style>
 </head>
 <body>
@@ -302,10 +251,8 @@
             <p>Schedule & Auto Fund Management</p>
         </header>
 
-        <!-- Auto Fund Management Section -->
         <div class="card finance-card">
             <h2 class="section-title finance-title">💳 Fund Management (Auto)</h2>
-            
             <div class="balance-container">
                 <div class="balance-label">Current Balance</div>
                 <div class="balance-amount" id="total-balance">৳0</div>
@@ -324,7 +271,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="transaction-history">
                 <div class="history-header" id="history-count">AUTO TRANSACTION HISTORY (0)</div>
                 <div id="finance-container">
@@ -333,7 +279,6 @@
             </div>
         </div>
 
-        <!-- Live Matches Section -->
         <div class="card">
             <h2 class="section-title">🎮 Live & Upcoming Matches</h2>
             <div id="live-container">
@@ -341,7 +286,6 @@
             </div>
         </div>
 
-        <!-- History Matches Section -->
         <div class="card">
             <h2 class="section-title history-title">📜 Match History</h2>
             <div id="history-container">
@@ -351,22 +295,21 @@
     </div>
 
     <script>
-        // 👉 আপনার গুগল শিটের Publish করা মূল (Matches) CSV লিংকটি এখানে বসাবেন:
+        // আপনার আসল গুগল শিটের লিংক এখানে বসানো আছে
         const MATCHES_CSV_URL = 'https://docs.google.com/spreadsheets/d/1ntxtcAxIKwYPBzBsaZJbqGHCTpLBHLZ0uQfolmBtuuo/export?format=csv&gid=0';
 
         async function fetchGoogleSheetData() {
             try {
-                if(MATCHES_CSV_URL.includes('http')) {
-                    const matchRes = await fetch(MATCHES_CSV_URL);
-                    const matchText = await matchRes.text();
-                    parseMatchesAndFinances(matchText);
-                } else {
-                    const errorMsg = '<p style="color:#ef4444; text-align:center;">Please update your Matches CSV link!</p>';
-                    document.getElementById('live-container').innerHTML = errorMsg;
-                    document.getElementById('history-container').innerHTML = errorMsg;
-                }
+                const matchRes = await fetch(MATCHES_CSV_URL);
+                if (!matchRes.ok) throw new Error('Network response was not ok');
+                const matchText = await matchRes.text();
+                parseMatchesAndFinances(matchText);
             } catch (error) {
                 console.error('Error fetching data:', error);
+                const errorMsg = '<p style="color:#ef4444; text-align:center;">Failed to load data. Make sure your Google Sheet is set to "Anyone with the link can view".</p>';
+                document.getElementById('live-container').innerHTML = errorMsg;
+                document.getElementById('history-container').innerHTML = errorMsg;
+                document.getElementById('finance-container').innerHTML = errorMsg;
             }
         }
 
@@ -396,38 +339,29 @@
         function parseMatchesAndFinances(csvText) {
             const rows = parseCSV(csvText);
             
-            // Match variables
             let liveHtml = '';
             let historyHtml = '';
             
-            // Finance variables
             let totalIncome = 0;
             let totalExpense = 0;
             let financeHtml = '';
             let transactionCount = 0;
             
-            // লুপটি নিচ থেকে উপরে চালাচ্ছি যাতে নতুন ট্রানজেকশন/ম্যাচ উপরে শো করে
             for (let i = rows.length - 1; i >= 1; i--) {
                 let r = rows[i];
                 if (r.length >= 1 && r[0]) {
                     let tournamentName = r[0] || '';       
                     let matchTypeRound = r[1] || '';       
                     let topQualify = r[2] || '';           
-                    let date = r[3] || 'Unknown Date';                 
+                    let date = r[3] || 'Upcoming';                 
                     let maps = r[4] || '';                 
                     let matchTime = r[5] || '';            
                     let startTime = r[6] || '';            
                     let status = r[7] || '';               
-                    let investmentAmount = parseFloat(r[8]) || 0; // Column I (Expense)
-                    let prizeAmount = parseFloat(r[9]) || 0;      // Column J (Income)
-                    let notes = r[10] || '';                      // Column K (Notes)
+                    let investmentAmount = parseFloat(r[8]) || 0; 
+                    let prizeAmount = parseFloat(r[9]) || 0;      
+                    let notes = r[10] || '';                      
 
-                    // ------------------------------------------------
-                    // 1. অটোম্যাটিক ফিন্যান্স ক্যালকুলেশন (Auto Finance)
-                    // ------------------------------------------------
-                    let matchShortName = tournamentName ? tournamentName.substring(0, 20) + '...' : 'Match';
-                    
-                    // প্রাইজ জিতলে (Income)
                     if (prizeAmount > 0) {
                         totalIncome += prizeAmount;
                         transactionCount++;
@@ -445,7 +379,6 @@
                         `;
                     }
 
-                    // ইনভেস্টমেন্ট করলে (Expense)
                     if (investmentAmount > 0) {
                         totalExpense += investmentAmount;
                         transactionCount++;
@@ -463,9 +396,6 @@
                         `;
                     }
 
-                    // ------------------------------------------------
-                    // 2. ম্যাচ কার্ড তৈরি (Live vs History)
-                    // ------------------------------------------------
                     let statusLower = status.toLowerCase();
                     let isHistory = statusLower.includes('completed') || statusLower.includes('finished') || statusLower.includes('played');
                     let cardClass = isHistory ? 'match-card history-card' : 'match-card live-card';
@@ -473,7 +403,7 @@
                     let cardContent = `
                         <div class="${cardClass}">
                             <div class="match-header">
-                                <span class="match-title">🔥 ${tournamentName} <span style="font-size:0.9rem; color:#9ca3af; font-weight:normal;">(${matchTypeRound})</span></span>
+                                <span class="match-title">🔥 ${tournamentName} ${matchTypeRound ? `<span style="font-size:0.9rem; color:#9ca3af; font-weight:normal;">(${matchTypeRound})</span>` : ''}</span>
                                 <span class="match-time-badge">📅 ${date}</span>
                             </div>
                             <div class="match-details">
@@ -498,14 +428,12 @@
                 }
             }
             
-            // Update Matches UI
             document.getElementById('live-container').innerHTML = liveHtml || '<p style="color:var(--text-muted); text-align:center;">No upcoming matches.</p>';
             document.getElementById('history-container').innerHTML = historyHtml || '<p style="color:var(--text-muted); text-align:center;">No match history.</p>';
 
-            // Update Finance UI
             let currentBalance = totalIncome - totalExpense;
             let netChangeColor = currentBalance >= 0 ? 'var(--income-color)' : 'var(--expense-color)';
-            let netChangeSign = currentBalance >= 0 ? '+' : '';
+            let netChangeSign = currentBalance > 0 ? '+' : '';
 
             document.getElementById('total-balance').innerText = `৳${currentBalance}`;
             document.getElementById('total-income').innerText = `+৳${totalIncome}`;
@@ -516,4 +444,11 @@
             netChangeEl.style.color = netChangeColor;
 
             document.getElementById('history-count').innerText = `AUTO TRANSACTION HISTORY (${transactionCount})`;
-            document.getElementById('finance-cont
+            document.getElementById('finance-container').innerHTML = financeHtml || '<p style="color:var(--text-muted); text-align:center;">No investments or prizes recorded yet.</p>';
+        }
+
+        fetchGoogleSheetData();
+    </script>
+</body>
+                            </html>
+                
