@@ -313,7 +313,7 @@
     </div>
 
     <script>
-        // এখানে আপনার ড্যাশবোর্ডের পাসওয়ার্ড পরিবর্তন করে দিতে পারেন (ডিফল্ট: 1234)
+        // এখানে নতুন পাসওয়ার্ড সেট করা হলো
         const DEFAULT_PASSWORD = '11225588'; 
 
         const MATCHES_CSV_URL = 'https://docs.google.com/spreadsheets/d/1ntxtcAxIKwYPBzBsaZJbqGHCTpLBHLZ0uQfolmBtuuo/export?format=csv&gid=0';
@@ -321,7 +321,6 @@
 
         let globalTransactions = [];
 
-        // Logo Logic
         function loadLogo() {
             const savedLogo = localStorage.getItem('team_logo_url');
             if (savedLogo) {
@@ -346,7 +345,6 @@
             }
         }
 
-        // Password Authentication Logic
         function checkPassword() {
             const inputVal = document.getElementById('pass-input').value;
             if (inputVal === DEFAULT_PASSWORD) {
@@ -373,7 +371,6 @@
             initDashboard();
         }
 
-        // Auto check login session on load
         if (sessionStorage.getItem('isLoggedIn') === 'true') {
             showDashboard();
         }
@@ -473,4 +470,7 @@
 
             const registeredTournaments = new Set();
 
-            for (let 
+            for (let i = rows.length - 1; i >= 1; i--) {
+                let r = rows[i];
+                if (r.length >= 1 && r[0]) {
+                    let tourna
