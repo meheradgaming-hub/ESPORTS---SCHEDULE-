@@ -6,12 +6,14 @@
     <title>Neo Flash Team - Tournament Schedule</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent-color: #f59e0b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: #334155;
+            --bg-color: #070b19;
+            --card-bg: #111827;
+            --accent-glow: #f59e0b;
+            --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #1f2937;
+            --card-border: #374151;
         }
 
         * {
@@ -23,8 +25,10 @@
 
         body {
             background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, var(--bg-color) 70%);
             color: var(--text-main);
-            padding: 20px;
+            padding: 25px 15px;
+            min-height: 100vh;
         }
 
         .container {
@@ -34,80 +38,109 @@
 
         header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
         }
 
-
         header h1 {
-            font-size: 1.8rem;
-            color: var(--accent-color);
+            font-size: 2.2rem;
+            background: linear-gradient(to right, #fbbf24, #f59e0b, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            font-weight: 800;
+            text-shadow: 0 0 30px rgba(245, 158, 11, 0.3);
         }
 
         header p {
             color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-top: 5px;
+            font-size: 1rem;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
         }
 
         .card {
             background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
         }
 
         .section-title {
-            font-size: 1.1rem;
-            color: var(--accent-color);
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 5px;
+            font-size: 1.2rem;
+            color: #fbbf24;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
         }
 
         .match-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border-color);
-            border-left: 4px solid var(--accent-color);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
+            background: linear-gradient(145deg, rgba(31, 41, 55, 0.4), rgba(17, 24, 39, 0.8));
+            border: 1px solid var(--card-border);
+            border-left: 5px solid #f59e0b;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 18px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .match-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.15);
+            border-color: #4b5563;
         }
 
         .match-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 14px;
             flex-wrap: wrap;
             gap: 10px;
         }
 
         .match-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--text-main);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.5px;
         }
 
         .match-time-badge {
             background: rgba(245, 158, 11, 0.15);
-            color: var(--accent-color);
-            padding: 4px 10px;
-            border-radius: 6px;
+            color: #fbbf24;
+            padding: 6px 12px;
+            border-radius: 8px;
             font-size: 0.85rem;
-            font-weight: bold;
+            font-weight: 700;
+            border: 1px solid rgba(245, 158, 11, 0.3);
         }
 
         .match-details {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 10px;
-            font-size: 0.9rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            font-size: 0.95rem;
             color: var(--text-muted);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .match-details span {
+            display: flex;
+            justify-content: space-between;
         }
 
         .match-details span strong {
@@ -115,18 +148,20 @@
         }
 
         .rule-text {
-            background: rgba(245, 158, 11, 0.05);
-            border: 1px dashed var(--accent-color);
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            margin-top: 8px;
+            background: rgba(236, 72, 153, 0.08);
+            border: 1px dashed rgba(236, 72, 153, 0.4);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            color: #f472b6;
         }
 
         .loading {
             text-align: center;
             color: var(--text-muted);
-            padding: 20px;
+            padding: 30px;
+            font-style: italic;
         }
     </style>
 </head>
@@ -134,11 +169,7 @@
 
     <div class="container">
         <header>
-
-            <img src="https://drive.google.com/file/d/1aG-LFnsCwwkDfeObiMpinmhNVF0VEwp7/view?usp=drivesdk" alt="Squad Logo" class="site-logo" id="site-logo">
-            
-            <!-- স্কোয়াড নাম অপশন -->
-            <h1 id="squad-title">NEO FLASH </h1>
+            <h1 id="squad-title">NEO FLASH TEAM</h1>
             <p>Live Squad Schedule & Match Updates</p>
         </header>
 
@@ -153,7 +184,7 @@
 
     <script>
         // 👉 আপনার গুগল শিটের Publish করা CSV লিংকটি এখানে বসাবেন:
-        const MATCHES_CSV_URL = 'https://docs.google.com/spreadsheets/d/1ntxtcAxIKwYPBzBsaZJbqGHCTpLBHLZ0uQfolmBtuuo/export?format=csv&gid=0';
+        const MATCHES_CSV_URL = 'https://docs.google.com/spreadsheets/d/131X2ZImv5R1yTUfQwZiuxm1cBxSGhiZrMY85akibdso/export?format=csv&gid=0';
 
         async function fetchGoogleSheetData() {
             try {
@@ -199,7 +230,6 @@
             for (let i = 1; i < rows.length; i++) {
                 let r = rows[i];
                 if (r.length >= 1 && r[0]) {
-                    // শিটের কলাম অনুযায়ী নতুন ফিল্ডগুলো সেট করা হলো:
                     let tournamentName = r[0] || '';       // Tournament Name
                     let matchTypeRound = r[1] || '';       // Match Type / Round
                     let topQualify = r[2] || '';           // Top Qualify
@@ -214,7 +244,7 @@
                     html += `
                         <div class="match-card">
                             <div class="match-header">
-                                <span class="match-title">🔥 ${tournamentName} (${matchTypeRound})</span>
+                                <span class="match-title">🔥 ${tournamentName} <span style="font-size:0.9rem; color:#9ca3af; font-weight:normal;">(${matchTypeRound})</span></span>
                                 <span class="match-time-badge">📅 ${date}</span>
                             </div>
                             <div class="match-details">
@@ -223,7 +253,7 @@
                                 ${startTime ? `<span>Start Time: <strong>${startTime}</strong></span>` : ''}
                                 ${topQualify ? `<span>Top Qualify: <strong>${topQualify}</strong></span>` : ''}
                                 ${status ? `<span>Status: <strong>${status}</strong></span>` : ''}
-                                ${investmentAmount ? `<span>Investment: <strong>৳${investmentAmount}</strong></span>` : ''}
+                                ${investmentAmount ? `<span>Investment: <strong style="color:#34d399;">৳${investmentAmount}</strong></span>` : ''}
                             </div>
                             ${notes ? `
                                 <div class="rule-text">
@@ -240,5 +270,4 @@
         fetchGoogleSheetData();
     </script>
 </body>
-    </html>
-    
+</html>
