@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neo Flash Team - Tournament Schedule</title>
+    <title>Neo Flash Team - Tournament Hub</title>
     <style>
         :root {
             --bg-color: #070b19;
@@ -13,6 +13,9 @@
             --text-muted: #9ca3af;
             --border-color: #1f2937;
             --card-border: #374151;
+            --income-color: #34d399; /* Green for profit */
+            --expense-color: #ef4444; /* Red for loss */
+            --balance-color: #38bdf8; /* Blue for balance */
         }
 
         * {
@@ -70,7 +73,6 @@
             backdrop-filter: blur(10px);
         }
 
-        /* Live Section Title */
         .section-title {
             font-size: 1.2rem;
             color: #fbbf24;
@@ -84,13 +86,119 @@
             padding-bottom: 10px;
         }
 
-        /* History Section Title */
+        /* --- Fund Management Section Styles --- */
+        .finance-card {
+            border: 1px solid #1e3a8a;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.1);
+        }
+        
+        .finance-title {
+            color: var(--balance-color);
+            border-bottom-color: #1e3a8a;
+        }
+
+        .balance-container {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px dashed var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .balance-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .balance-amount {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--balance-color);
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+            margin-bottom: 15px;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .transaction-history {
+            margin-top: 15px;
+        }
+
+        .history-header {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid;
+        }
+
+        .transaction-item.income { border-left-color: var(--income-color); }
+        .transaction-item.expense { border-left-color: var(--expense-color); }
+
+        .trans-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .trans-icon {
+            font-size: 1.5rem;
+        }
+
+        .trans-desc {
+            font-size: 1rem;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .trans-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .trans-amount {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .amt-income { color: var(--income-color); }
+        .amt-expense { color: var(--expense-color); }
+
+        /* --- Match Cards Styles (Previous) --- */
         .history-title {
             color: #9ca3af;
             border-bottom-color: #374151;
         }
-
-        /* Base Match Card */
         .match-card {
             border: 1px solid var(--card-border);
             border-radius: 12px;
@@ -98,8 +206,6 @@
             margin-bottom: 18px;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-
-        /* Live Card Style */
         .live-card {
             background: linear-gradient(145deg, rgba(31, 41, 55, 0.4), rgba(17, 24, 39, 0.8));
             border-left: 5px solid #f59e0b;
@@ -109,34 +215,11 @@
             box-shadow: 0 8px 20px rgba(245, 158, 11, 0.15);
             border-color: #4b5563;
         }
-        .live-card .match-title {
-            color: #ffffff;
-        }
-        .live-card .match-time-badge {
-            background: rgba(245, 158, 11, 0.15);
-            color: #fbbf24;
-            border: 1px solid rgba(245, 158, 11, 0.3);
-        }
-
-        /* History Card Style */
         .history-card {
             background: linear-gradient(145deg, rgba(17, 24, 39, 0.4), rgba(17, 24, 39, 0.6));
             border-left: 5px solid #6b7280;
-            opacity: 0.75; /* একটু আবছা দেখাবে */
+            opacity: 0.75;
         }
-        .history-card:hover {
-            opacity: 1;
-            border-color: #4b5563;
-        }
-        .history-card .match-title {
-            color: #d1d5db; /* একটু গ্রে কালার */
-        }
-        .history-card .match-time-badge {
-            background: rgba(107, 114, 128, 0.15);
-            color: #9ca3af;
-            border: 1px solid rgba(107, 114, 128, 0.3);
-        }
-
         .match-header {
             display: flex;
             justify-content: space-between;
@@ -145,20 +228,16 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-
         .match-title {
             font-size: 1.2rem;
             font-weight: 700;
-            letter-spacing: 0.5px;
         }
-
         .match-time-badge {
             padding: 6px 12px;
             border-radius: 8px;
             font-size: 0.85rem;
             font-weight: 700;
         }
-
         .match-details {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -170,16 +249,10 @@
             padding: 12px;
             border-radius: 8px;
         }
-
         .match-details span {
             display: flex;
             justify-content: space-between;
         }
-
-        .match-details span strong {
-            color: var(--text-main);
-        }
-
         .rule-text {
             background: rgba(236, 72, 153, 0.08);
             border: 1px dashed rgba(236, 72, 153, 0.4);
@@ -187,9 +260,7 @@
             border-radius: 8px;
             font-size: 0.9rem;
             margin-top: 10px;
-            color: #f472b6;
         }
-
         .loading {
             text-align: center;
             color: var(--text-muted);
@@ -203,8 +274,39 @@
     <div class="container">
         <header>
             <h1 id="squad-title">NEO FLASH TEAM</h1>
-            <p>Live Squad Schedule & Match Updates</p>
+            <p>Schedule & Fund Management</p>
         </header>
+
+        <!-- Fund Management Section -->
+        <div class="card finance-card">
+            <h2 class="section-title finance-title">💳 Fund Management</h2>
+            
+            <div class="balance-container">
+                <div class="balance-label">Current Balance</div>
+                <div class="balance-amount" id="total-balance">৳0</div>
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-label">TOTAL INCOME</div>
+                        <div class="stat-value" id="total-income" style="color: var(--income-color);">+৳0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">TOTAL EXPENSE</div>
+                        <div class="stat-value" id="total-expense" style="color: var(--expense-color);">-৳0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">NET PROFIT/LOSS</div>
+                        <div class="stat-value" id="net-change">৳0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="transaction-history">
+                <div class="history-header" id="history-count">TRANSACTION HISTORY (0)</div>
+                <div id="finance-container">
+                    <div class="loading">Loading finances...</div>
+                </div>
+            </div>
+        </div>
 
         <!-- Live Matches Section -->
         <div class="card">
@@ -224,19 +326,28 @@
     </div>
 
     <script>
-        // 👉 আপনার গুগল শিটের Publish করা CSV লিংকটি এখানে বসাবেন:
-        const MATCHES_CSV_URL = 'https://docs.google.com/spreadsheets/d/1ntxtcAxIKwYPBzBsaZJbqGHCTpLBHLZ0uQfolmBtuuo/export?format=csv&gid=0';
+        // 👉 ১. ম্যাচের শিট লিংক (আগেরটা)
+        const MATCHES_CSV_URL = 'https://docs.google.com/spreadsheets/d/131X2ZImv5R1yTUfQwZiuxm1cBxSGhiZrMY85akibdso/export?format=csv&gid=0';
+        
+        // 👉 ২. নতুন ফিন্যান্স (আয়-ব্যয়) ট্যাবের লিংক (এখানে নতুন ট্যাবের gid বসাবেন)
+        const FINANCE_CSV_URL = 'https://docs.google.com/spreadsheets/d/131X2ZImv5R1yTUfQwZiuxm1cBxSGhiZrMY85akibdso/export?format=csv&gid=123456789'; // gid পরিবর্তন করুন
 
         async function fetchGoogleSheetData() {
             try {
+                // Fetch Matches
                 if(MATCHES_CSV_URL.includes('http')) {
                     const matchRes = await fetch(MATCHES_CSV_URL);
                     const matchText = await matchRes.text();
                     parseMatches(matchText);
+                }
+
+                // Fetch Finances
+                if(FINANCE_CSV_URL.includes('http') && !FINANCE_CSV_URL.includes('123456789')) {
+                    const financeRes = await fetch(FINANCE_CSV_URL);
+                    const financeText = await financeRes.text();
+                    parseFinance(financeText);
                 } else {
-                    const errorMsg = '<p style="color:#ef4444; text-align:center;">Please update your Matches CSV link!</p>';
-                    document.getElementById('live-container').innerHTML = errorMsg;
-                    document.getElementById('history-container').innerHTML = errorMsg;
+                    document.getElementById('finance-container').innerHTML = '<p style="color:var(--text-muted); text-align:center;">Finance tab not linked yet. Update FINANCE_CSV_URL.</p>';
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -266,6 +377,72 @@
             return arr;
         }
 
+        // --- ফিন্যান্স (Finance) পার্স করার কোড ---
+        function parseFinance(csvText) {
+            const rows = parseCSV(csvText);
+            let html = '';
+            let totalIncome = 0;
+            let totalExpense = 0;
+            let transactionCount = 0;
+
+            // শিটের নিচ থেকে উপরের দিকে লুপ চালাচ্ছি যাতে নতুন ট্রানজেকশন উপরে দেখায়
+            for (let i = rows.length - 1; i >= 1; i--) {
+                let r = rows[i];
+                if (r.length >= 3 && r[1]) { // Date এবং Description থাকলে
+                    let date = r[0] || '';
+                    let description = r[1] || '';
+                    let type = (r[2] || '').toLowerCase().trim(); // Income নাকি Expense
+                    let amount = parseFloat(r[3]) || 0; // টাকার পরিমাণ
+
+                    let isIncome = type === 'income';
+                    
+                    if (isIncome) {
+                        totalIncome += amount;
+                    } else if (type === 'expense') {
+                        totalExpense += amount;
+                    } else {
+                        continue; // Income বা Expense না লেখা থাকলে স্কিপ করবে
+                    }
+
+                    transactionCount++;
+                    let icon = isIncome ? '💰' : '🧾';
+                    let sign = isIncome ? '+' : '-';
+                    let itemClass = isIncome ? 'income' : 'expense';
+                    let amountClass = isIncome ? 'amt-income' : 'amt-expense';
+
+                    html += `
+                        <div class="transaction-item ${itemClass}">
+                            <div class="trans-left">
+                                <div class="trans-icon">${icon}</div>
+                                <div>
+                                    <div class="trans-desc">${description}</div>
+                                    <div class="trans-date">${date}</div>
+                                </div>
+                            </div>
+                            <div class="trans-amount ${amountClass}">${sign}৳${amount}</div>
+                        </div>
+                    `;
+                }
+            }
+
+            let currentBalance = totalIncome - totalExpense;
+            let netChangeColor = currentBalance >= 0 ? 'var(--income-color)' : 'var(--expense-color)';
+            let netChangeSign = currentBalance >= 0 ? '+' : '';
+
+            // Update UI
+            document.getElementById('total-balance').innerText = `৳${currentBalance}`;
+            document.getElementById('total-income').innerText = `+৳${totalIncome}`;
+            document.getElementById('total-expense').innerText = `-৳${totalExpense}`;
+            
+            let netChangeEl = document.getElementById('net-change');
+            netChangeEl.innerText = `${netChangeSign}৳${currentBalance}`;
+            netChangeEl.style.color = netChangeColor;
+
+            document.getElementById('history-count').innerText = `TRANSACTION HISTORY (${transactionCount})`;
+            document.getElementById('finance-container').innerHTML = html || '<p style="color:var(--text-muted); text-align:center;">No transactions found.</p>';
+        }
+
+        // --- ম্যাচ পার্স করার কোড (আগেরটাই) ---
         function parseMatches(csvText) {
             const rows = parseCSV(csvText);
             let liveHtml = '';
@@ -285,11 +462,8 @@
                     let investmentAmount = r[8] || '';     
                     let notes = r[9] || '';                
 
-                    // লজিক: Status এ completed, finished, বা played লেখা থাকলে সেটা হিস্ট্রিতে যাবে
                     let statusLower = status.toLowerCase();
                     let isHistory = statusLower.includes('completed') || statusLower.includes('finished') || statusLower.includes('played');
-                    
-                    // হিস্ট্রি হলে 'history-card' ক্লাস পাবে, নাহলে 'live-card' ক্লাস পাবে
                     let cardClass = isHistory ? 'match-card history-card' : 'match-card live-card';
 
                     let cardContent = `
@@ -314,22 +488,17 @@
                         </div>
                     `;
 
-                    // কন্ডিশন অনুযায়ী ভাগ করে দেওয়া হচ্ছে
-                    if (isHistory) {
-                        historyHtml += cardContent;
-                    } else {
-                        liveHtml += cardContent;
-                    }
+                    if (isHistory) historyHtml += cardContent;
+                    else liveHtml += cardContent;
                 }
             }
             
-            // ওয়েবসাইটে শো করা
-            document.getElementById('live-container').innerHTML = liveHtml || '<p style="color:var(--text-muted); text-align:center;">No upcoming matches at the moment.</p>';
-            document.getElementById('history-container').innerHTML = historyHtml || '<p style="color:var(--text-muted); text-align:center;">No match history available yet.</p>';
+            document.getElementById('live-container').innerHTML = liveHtml || '<p style="color:var(--text-muted); text-align:center;">No upcoming matches.</p>';
+            document.getElementById('history-container').innerHTML = historyHtml || '<p style="color:var(--text-muted); text-align:center;">No match history.</p>';
         }
 
         fetchGoogleSheetData();
     </script>
 </body>
-    </html>
-    
+                            </html>
+                        
