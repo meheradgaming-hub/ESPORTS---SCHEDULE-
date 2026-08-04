@@ -28,10 +28,33 @@
             min-height: 100vh;
         }
 
-        .container { max-width: 900px; margin: 0 auto; }
+        .container { max-width: 900px; margin: 0 auto; position: relative; }
 
         header {
             text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-container {
+            width: 90px;
+            height: 90px;
+            margin-bottom: 12px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #f59e0b;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         header h1 {
@@ -68,10 +91,14 @@
         .stat-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase;}
         .stat-value { font-size: 1.1rem; font-weight: 700; }
 
-        /* Transaction History */
-        .transaction-history { max-height: 350px; overflow-y: auto; padding-right: 5px; margin-top: 10px; }
-        .transaction-history::-webkit-scrollbar { width: 6px; }
-        .transaction-history::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
+        /* Shared Scrollable Area for Matches & Transactions */
+        .scrollable-box {
+            max-height: 420px; 
+            overflow-y: auto; 
+            padding-right: 6px; 
+        }
+        .scrollable-box::-webkit-scrollbar { width: 6px; }
+        .scrollable-box::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
 
         .transaction-item {
             display: flex; justify-content: space-between; align-items: center;
@@ -96,9 +123,7 @@
         .player-name { font-weight: 700; font-size: 1.05rem; color: var(--text-main); }
         .player-amount { font-weight: 800; font-size: 1.1rem; color: var(--payout-color); }
 
-        .match-card {
-            border: 1px solid var(--card-border); border-radius: 12px; padding: 18px; margin-bottom: 18px;
-        }
+        .match-card { border: 1px solid var(--card-border); border-radius: 12px; padding: 18px; margin-bottom: 18px; }
         .live-card { background: linear-gradient(145deg, rgba(31, 41, 55, 0.4), rgba(17, 24, 39, 0.8)); border-left: 5px solid #f59e0b; }
         .history-card { background: linear-gradient(145deg, rgba(17, 24, 39, 0.4), rgba(17, 24, 39, 0.6)); border-left: 5px solid #6b7280; opacity: 0.8; }
         
@@ -116,6 +141,10 @@
 
     <div class="container">
         <header>
+            <div class="logo-container" id="logo-box" style="display: none;">
+                <img id="team-logo" src="" alt="Team Logo">
+            </div>
+
             <h1 id="squad-title">NEO FLASH TEAM</h1>
             <p>Schedule & Auto Fund Management</p>
         </header>
@@ -147,7 +176,7 @@
         <!-- All Transactions Ledger -->
         <div class="card">
             <h2 class="section-title" style="color: #38bdf8; border-bottom-color: #0369a1;">📊 All Transaction History</h2>
-            <div class="transaction-history" id="transaction-container">
+            <div class="scrollable-box" id="transaction-container">
                 <div class="loading">Loading transactions...</div>
             </div>
         </div>
@@ -160,18 +189,18 @@
             </div>
         </div>
 
-        <!-- Live Matches Section -->
+        <!-- Live Matches Section (With individual scrolling) -->
         <div class="card">
             <h2 class="section-title">🎮 Live & Upcoming Matches</h2>
-            <div id="live-container">
+            <div class="scrollable-box" id="live-container">
                 <div class="loading">Loading schedules...</div>
             </div>
         </div>
 
-        <!-- Match History Section -->
+        <!-- Match History Section (With individual scrolling) -->
         <div class="card">
             <h2 class="section-title" style="color: #9ca3af; border-bottom-color: #374151;">📜 Match History</h2>
-            <div id="history-container">
+            <div class="scrollable-box" id="history-container">
                 <div class="loading">Loading history...</div>
             </div>
         </div>
@@ -182,6 +211,21 @@
         const PLAYERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/1ntxtcAxIKwYPBzBsaZJbqGHCTpLBHLZ0uQfolmBtuuo/export?format=csv&gid=999617109';
 
         let globalTransactions = [];
+
+        function loadLogo() {
+            const savedLogo = localStorage.getItem('team_logo_url');
+            if (savedLogo) {
+                document.getElementById('team-logo').src = savedLogo;
+                document.getElementById('logo-box').style.display = 'flex';
+            } else {
+                document.getElementById('logo-box').style.display = 'none';
+            }
+        }
+
+        window.onload = function() {
+            loadLogo();
+            initDashboard();
+        };
 
         async function initDashboard() {
             try {
@@ -276,10 +320,12 @@
             let totalIncome = 0;
             let totalExpense = 0;
 
+            const registeredTournaments = new Set();
+
             for (let i = rows.length - 1; i >= 1; i--) {
                 let r = rows[i];
                 if (r.length >= 1 && r[0]) {
-                    let tournamentName = r[0] || '';       
+                    let tournamentName = r[0].trim() || '';       
                     let matchTypeRound = r[1] || '';       
                     let topQualify = r[2] || '';           
                     let date = r[3] || 'Upcoming';                 
@@ -292,7 +338,21 @@
                     let notes = r[10] || '';                      
 
                     totalIncome += prizeAmount;
-                    totalExpense += investmentAmount;
+
+                    let tourKey = tournamentName.toLowerCase();
+                    if (investmentAmount > 0) {
+                        if (!registeredTournaments.has(tourKey)) {
+                            totalExpense += investmentAmount;
+                            registeredTournaments.add(tourKey);
+
+                            globalTransactions.push({
+                                type: 'expense',
+                                title: `Entry Fee: ${tournamentName}`,
+                                date: date,
+                                amount: investmentAmount
+                            });
+                        }
+                    }
 
                     if (prizeAmount > 0) {
                         globalTransactions.push({
@@ -303,17 +363,8 @@
                         });
                     }
 
-                    if (investmentAmount > 0) {
-                        globalTransactions.push({
-                            type: 'expense',
-                            title: `Entry Fee: ${tournamentName}`,
-                            date: date,
-                            amount: investmentAmount
-                        });
-                    }
-
                     let statusLower = status.toLowerCase();
-                    let isHistory = statusLower.includes('completed') || statusLower.includes('finished') || statusLower.includes('played');
+                    let isHistory = statusLower.includes('complete') || statusLower.includes('finished') || statusLower.includes('played');
                     let cardClass = isHistory ? 'match-card history-card' : 'match-card live-card';
 
                     let cardContent = `
@@ -364,43 +415,4 @@
 
         function renderTransactions() {
             let html = '';
-            if (globalTransactions.length === 0) {
-                html = '<p style="color:var(--text-muted); text-align:center;">No transactions recorded yet.</p>';
-            } else {
-                globalTransactions.forEach(t => {
-                    let icon = '💸';
-                    let amountClass = 'color: var(--payout-color)';
-                    let sign = '-';
-
-                    if (t.type === 'income') {
-                        icon = '🏆';
-                        amountClass = 'color: var(--income-color)';
-                        sign = '+';
-                    } else if (t.type === 'expense') {
-                        icon = '🎮';
-                        amountClass = 'color: var(--expense-color)';
-                        sign = '-';
-                    }
-
-                    html += `
-                        <div class="transaction-item ${t.type}">
-                            <div class="trans-left">
-                                <div class="trans-icon">${icon}</div>
-                                <div>
-                                    <div class="trans-desc">${t.title}</div>
-                                    <div class="trans-date">${t.date}</div>
-                                </div>
-                            </div>
-                            <div class="trans-amount" style="${amountClass}">${sign}৳${t.amount}</div>
-                        </div>
-                    `;
-                });
-            }
-            document.getElementById('transaction-container').innerHTML = html;
-        }
-
-        initDashboard();
-    </script>
-</body>
-    </html>
-    
+            if 
