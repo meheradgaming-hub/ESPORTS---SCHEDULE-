@@ -9,7 +9,6 @@
             --bg-color: #070b19;
             --card-bg: #111827;
             --accent-glow: #f59e0b;
-            --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
             --border-color: #1f2937;
@@ -67,10 +66,11 @@
             border-radius: 16px;
             padding: 24px;
             margin-bottom: 25px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(10px);
         }
 
+        /* Live Section Title */
         .section-title {
             font-size: 1.2rem;
             color: #fbbf24;
@@ -84,20 +84,57 @@
             padding-bottom: 10px;
         }
 
+        /* History Section Title */
+        .history-title {
+            color: #9ca3af;
+            border-bottom-color: #374151;
+        }
+
+        /* Base Match Card */
         .match-card {
-            background: linear-gradient(145deg, rgba(31, 41, 55, 0.4), rgba(17, 24, 39, 0.8));
             border: 1px solid var(--card-border);
-            border-left: 5px solid #f59e0b;
             border-radius: 12px;
             padding: 18px;
             margin-bottom: 18px;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .match-card:hover {
+        /* Live Card Style */
+        .live-card {
+            background: linear-gradient(145deg, rgba(31, 41, 55, 0.4), rgba(17, 24, 39, 0.8));
+            border-left: 5px solid #f59e0b;
+        }
+        .live-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(245, 158, 11, 0.15);
             border-color: #4b5563;
+        }
+        .live-card .match-title {
+            color: #ffffff;
+        }
+        .live-card .match-time-badge {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        /* History Card Style */
+        .history-card {
+            background: linear-gradient(145deg, rgba(17, 24, 39, 0.4), rgba(17, 24, 39, 0.6));
+            border-left: 5px solid #6b7280;
+            opacity: 0.75; /* একটু আবছা দেখাবে */
+        }
+        .history-card:hover {
+            opacity: 1;
+            border-color: #4b5563;
+        }
+        .history-card .match-title {
+            color: #d1d5db; /* একটু গ্রে কালার */
+        }
+        .history-card .match-time-badge {
+            background: rgba(107, 114, 128, 0.15);
+            color: #9ca3af;
+            border: 1px solid rgba(107, 114, 128, 0.3);
         }
 
         .match-header {
@@ -112,18 +149,14 @@
         .match-title {
             font-size: 1.2rem;
             font-weight: 700;
-            color: #ffffff;
             letter-spacing: 0.5px;
         }
 
         .match-time-badge {
-            background: rgba(245, 158, 11, 0.15);
-            color: #fbbf24;
             padding: 6px 12px;
             border-radius: 8px;
             font-size: 0.85rem;
             font-weight: 700;
-            border: 1px solid rgba(245, 158, 11, 0.3);
         }
 
         .match-details {
@@ -173,11 +206,19 @@
             <p>Live Squad Schedule & Match Updates</p>
         </header>
 
-        <!-- Match Schedule Section -->
+        <!-- Live Matches Section -->
         <div class="card">
-            <h2 class="section-title">🎮 Live Match Schedules</h2>
-            <div id="schedule-container">
-                <div class="loading">Loading schedules from Google Sheets...</div>
+            <h2 class="section-title">🎮 Live & Upcoming Matches</h2>
+            <div id="live-container">
+                <div class="loading">Loading schedules...</div>
+            </div>
+        </div>
+
+        <!-- History Matches Section -->
+        <div class="card">
+            <h2 class="section-title history-title">📜 Match History</h2>
+            <div id="history-container">
+                <div class="loading">Loading history...</div>
             </div>
         </div>
     </div>
@@ -193,7 +234,9 @@
                     const matchText = await matchRes.text();
                     parseMatches(matchText);
                 } else {
-                    document.getElementById('schedule-container').innerHTML = '<p style="color:#ef4444; text-align:center;">Please update your Matches CSV link in the code!</p>';
+                    const errorMsg = '<p style="color:#ef4444; text-align:center;">Please update your Matches CSV link!</p>';
+                    document.getElementById('live-container').innerHTML = errorMsg;
+                    document.getElementById('history-container').innerHTML = errorMsg;
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -225,24 +268,32 @@
 
         function parseMatches(csvText) {
             const rows = parseCSV(csvText);
-            let html = '';
+            let liveHtml = '';
+            let historyHtml = '';
             
             for (let i = 1; i < rows.length; i++) {
                 let r = rows[i];
                 if (r.length >= 1 && r[0]) {
-                    let tournamentName = r[0] || '';       // Tournament Name
-                    let matchTypeRound = r[1] || '';       // Match Type / Round
-                    let topQualify = r[2] || '';           // Top Qualify
-                    let date = r[3] || '';                 // Date
-                    let maps = r[4] || '';                 // Maps
-                    let matchTime = r[5] || '';            // Match Time
-                    let startTime = r[6] || '';            // Start Time
-                    let status = r[7] || '';               // Status
-                    let investmentAmount = r[8] || '';     // Investment Amount (৳)
-                    let notes = r[9] || '';                // Notes
+                    let tournamentName = r[0] || '';       
+                    let matchTypeRound = r[1] || '';       
+                    let topQualify = r[2] || '';           
+                    let date = r[3] || '';                 
+                    let maps = r[4] || '';                 
+                    let matchTime = r[5] || '';            
+                    let startTime = r[6] || '';            
+                    let status = r[7] || '';               
+                    let investmentAmount = r[8] || '';     
+                    let notes = r[9] || '';                
 
-                    html += `
-                        <div class="match-card">
+                    // লজিক: Status এ completed, finished, বা played লেখা থাকলে সেটা হিস্ট্রিতে যাবে
+                    let statusLower = status.toLowerCase();
+                    let isHistory = statusLower.includes('completed') || statusLower.includes('finished') || statusLower.includes('played');
+                    
+                    // হিস্ট্রি হলে 'history-card' ক্লাস পাবে, নাহলে 'live-card' ক্লাস পাবে
+                    let cardClass = isHistory ? 'match-card history-card' : 'match-card live-card';
+
+                    let cardContent = `
+                        <div class="${cardClass}">
                             <div class="match-header">
                                 <span class="match-title">🔥 ${tournamentName} <span style="font-size:0.9rem; color:#9ca3af; font-weight:normal;">(${matchTypeRound})</span></span>
                                 <span class="match-time-badge">📅 ${date}</span>
@@ -252,22 +303,33 @@
                                 ${matchTime ? `<span>Match Time: <strong>${matchTime}</strong></span>` : ''}
                                 ${startTime ? `<span>Start Time: <strong>${startTime}</strong></span>` : ''}
                                 ${topQualify ? `<span>Top Qualify: <strong>${topQualify}</strong></span>` : ''}
-                                ${status ? `<span>Status: <strong>${status}</strong></span>` : ''}
-                                ${investmentAmount ? `<span>Investment: <strong style="color:#34d399;">৳${investmentAmount}</strong></span>` : ''}
+                                ${status ? `<span>Status: <strong style="${isHistory ? 'color:#9ca3af;' : 'color:#fbbf24;'}">${status}</strong></span>` : ''}
+                                ${investmentAmount ? `<span>Investment: <strong style="${isHistory ? 'color:#9ca3af;' : 'color:#34d399;'}">৳${investmentAmount}</strong></span>` : ''}
                             </div>
                             ${notes ? `
-                                <div class="rule-text">
+                                <div class="rule-text" style="${isHistory ? 'border-color:#4b5563; background:rgba(75,85,99,0.1); color:#9ca3af;' : ''}">
                                     📝 <strong>Notes:</strong> ${notes}
                                 </div>
                             ` : ''}
                         </div>
                     `;
+
+                    // কন্ডিশন অনুযায়ী ভাগ করে দেওয়া হচ্ছে
+                    if (isHistory) {
+                        historyHtml += cardContent;
+                    } else {
+                        liveHtml += cardContent;
+                    }
                 }
             }
-            document.getElementById('schedule-container').innerHTML = html || '<p style="color:var(--text-muted)">No matches available.</p>';
+            
+            // ওয়েবসাইটে শো করা
+            document.getElementById('live-container').innerHTML = liveHtml || '<p style="color:var(--text-muted); text-align:center;">No upcoming matches at the moment.</p>';
+            document.getElementById('history-container').innerHTML = historyHtml || '<p style="color:var(--text-muted); text-align:center;">No match history available yet.</p>';
         }
 
         fetchGoogleSheetData();
     </script>
 </body>
-</html>
+    </html>
+    
