@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neo Flash Team - Dashboard</title>
+    <title>Neo Flash  - Dashboard</title>
     <style>
         :root {
             --bg-color: #070b19;
@@ -27,73 +27,6 @@
             padding: 25px 15px;
             min-height: 100vh;
         }
-
-        /* Login Overlay Style */
-        #login-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(7, 11, 25, 0.95);
-            backdrop-filter: blur(15px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-
-        .login-box {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            padding: 30px;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 380px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-        }
-
-        .login-box h2 {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-            background: linear-gradient(to right, #fbbf24, #f59e0b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .login-box p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px; }
-
-        .login-input {
-            width: 100%;
-            padding: 12px 15px;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            color: #fff;
-            font-size: 1rem;
-            margin-bottom: 15px;
-            outline: none;
-            text-align: center;
-        }
-
-        .login-input:focus { border-color: #38bdf8; }
-
-        .login-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(to right, #f59e0b, #ec4899);
-            border: none;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        .login-btn:hover { opacity: 0.9; }
-        .error-msg { color: #ef4444; font-size: 0.85rem; margin-top: 10px; display: none; }
-
-        /* Main Dashboard Screen */
-        #dashboard-content { display: none; }
 
         .container { max-width: 900px; margin: 0 auto; position: relative; }
 
@@ -119,12 +52,6 @@
         }
 
         .action-btn:hover { background: rgba(255, 255, 255, 0.15); }
-
-        .logout-btn {
-            background: rgba(239, 68, 68, 0.15);
-            border-color: rgba(239, 68, 68, 0.4);
-            color: var(--expense-color);
-        }
 
         /* Dynamic Logo Styles */
         .logo-container {
@@ -225,97 +152,80 @@
 </head>
 <body>
 
-    <!-- Login Screen -->
-    <div id="login-overlay">
-        <div class="login-box">
-            <h2>🔒 RESTRICTED ACCESS</h2>
-            <p>Please enter password to view dashboard</p>
-            <input type="password" id="pass-input" class="login-input" placeholder="Enter Password" onkeypress="handleKey(event)">
-            <button class="login-btn" onclick="checkPassword()">UNLOCK DASHBOARD</button>
-            <div id="error-msg" class="error-msg">Incorrect Password! Try again.</div>
-        </div>
-    </div>
-
     <!-- Dashboard Main View -->
-    <div id="dashboard-content">
-        <div class="container">
-            <header>
-                <div class="header-top-btns">
-                    <button class="action-btn" onclick="updateLogo()">🖼️ Change Logo</button>
-                    <button class="action-btn logout-btn" onclick="logout()">🔒 Lock</button>
-                </div>
+    <div class="container">
+        <header>
+            <div class="header-top-btns">
+                <button class="action-btn" onclick="updateLogo()">🖼️ Change Logo</button>
+            </div>
+            
+            <!-- Dynamic Team Logo -->
+            <div class="logo-container" id="logo-box" style="display: none;">
+                <img id="team-logo" src="" alt="Team Logo">
+            </div>
+
+            <h1 id="squad-title">NEO FLASH </h1>
+            <p>Schedule &  Fund Management</p>
+        </header>
+
+        <!-- Fund Management Section -->
+        <div class="card finance-card">
+            <h2 class="section-title finance-title">💳 Net Profit / Loss (Auto)</h2>
+            <div class="balance-container">
+                <div class="balance-label">TOTAL NET BALANCE</div>
+                <div class="balance-amount" id="total-balance">৳0</div>
                 
-                <!-- Dynamic Team Logo -->
-                <div class="logo-container" id="logo-box" style="display: none;">
-                    <img id="team-logo" src="" alt="Team Logo">
-                </div>
-
-                <h1 id="squad-title">NEO FLASH TEAM</h1>
-                <p>Schedule & Auto Fund Management</p>
-            </header>
-
-            <!-- Fund Management Section -->
-            <div class="card finance-card">
-                <h2 class="section-title finance-title">💳 Net Profit / Loss (Auto)</h2>
-                <div class="balance-container">
-                    <div class="balance-label">TOTAL NET BALANCE</div>
-                    <div class="balance-amount" id="total-balance">৳0</div>
-                    
-                    <div class="stats-row">
-                        <div class="stat-item">
-                            <div class="stat-label">Total Won</div>
-                            <div class="stat-value" id="total-income" style="color: var(--income-color);">+৳0</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Entry Fees</div>
-                            <div class="stat-value" id="total-expense" style="color: var(--expense-color);">-৳0</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Player Paid</div>
-                            <div class="stat-value" id="total-player-paid" style="color: var(--payout-color);">-৳0</div>
-                        </div>
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-label">Total Won</div>
+                        <div class="stat-value" id="total-income" style="color: var(--income-color);">+৳0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Entry Fees</div>
+                        <div class="stat-value" id="total-expense" style="color: var(--expense-color);">-৳0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Player Paid</div>
+                        <div class="stat-value" id="total-player-paid" style="color: var(--payout-color);">-৳0</div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- All Transactions Ledger -->
-            <div class="card">
-                <h2 class="section-title" style="color: #38bdf8; border-bottom-color: #0369a1;">📊 All Transaction History</h2>
-                <div class="transaction-history" id="transaction-container">
-                    <div class="loading">Loading transactions...</div>
-                </div>
+        <!-- All Transactions Ledger -->
+        <div class="card">
+            <h2 class="section-title" style="color: #38bdf8; border-bottom-color: #0369a1;">📊 All Transaction History</h2>
+            <div class="transaction-history" id="transaction-container">
+                <div class="loading">Loading transactions...</div>
             </div>
+        </div>
 
-            <!-- Player Earnings Section -->
-            <div class="card">
-                <h2 class="section-title" style="color: #ec4899; border-bottom-color: #831843;">👤 Player Payments Summary</h2>
-                <div id="player-container" class="player-grid">
-                    <div class="loading">Loading players data...</div>
-                </div>
+        <!-- Player Earnings Section -->
+        <div class="card">
+            <h2 class="section-title" style="color: #ec4899; border-bottom-color: #831843;">👤 Player Payments Summary</h2>
+            <div id="player-container" class="player-grid">
+                <div class="loading">Loading players data...</div>
             </div>
+        </div>
 
-            <!-- Live Matches Section -->
-            <div class="card">
-                <h2 class="section-title">🎮 Live & Upcoming Matches</h2>
-                <div id="live-container">
-                    <div class="loading">Loading schedules...</div>
-                </div>
+        <!-- Live Matches Section -->
+        <div class="card">
+            <h2 class="section-title">🎮 Live & Upcoming Matches</h2>
+            <div id="live-container">
+                <div class="loading">Loading schedules...</div>
             </div>
+        </div>
 
-            <!-- Match History Section -->
-            <div class="card">
-                <h2 class="section-title" style="color: #9ca3af; border-bottom-color: #374151;">📜 Match History</h2>
-                <div id="history-container">
-                    <div class="loading">Loading history...</div>
-                </div>
+        <!-- Match History Section -->
+        <div class="card">
+            <h2 class="section-title" style="color: #9ca3af; border-bottom-color: #374151;">📜 Match History</h2>
+            <div id="history-container">
+                <div class="loading">Loading history...</div>
             </div>
         </div>
     </div>
 
     <script>
-        // এখানে নতুন পাসওয়ার্ড সেট করা হলো
-        const DEFAULT_PASSWORD = '11225588'; 
-
         const MATCHES_CSV_URL = 'https://docs.google.com/spreadsheets/d/1ntxtcAxIKwYPBzBsaZJbqGHCTpLBHLZ0uQfolmBtuuo/export?format=csv&gid=0';
         const PLAYERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/1ntxtcAxIKwYPBzBsaZJbqGHCTpLBHLZ0uQfolmBtuuo/export?format=csv&gid=999617109';
 
@@ -345,35 +255,11 @@
             }
         }
 
-        function checkPassword() {
-            const inputVal = document.getElementById('pass-input').value;
-            if (inputVal === DEFAULT_PASSWORD) {
-                sessionStorage.setItem('isLoggedIn', 'true');
-                showDashboard();
-            } else {
-                document.getElementById('error-msg').style.display = 'block';
-            }
-        }
-
-        function handleKey(e) {
-            if (e.key === 'Enter') checkPassword();
-        }
-
-        function logout() {
-            sessionStorage.removeItem('isLoggedIn');
-            location.reload();
-        }
-
-        function showDashboard() {
-            document.getElementById('login-overlay').style.display = 'none';
-            document.getElementById('dashboard-content').style.display = 'block';
+        // Auto load dashboard on startup
+        window.onload = function() {
             loadLogo();
             initDashboard();
-        }
-
-        if (sessionStorage.getItem('isLoggedIn') === 'true') {
-            showDashboard();
-        }
+        };
 
         async function initDashboard() {
             try {
@@ -473,4 +359,70 @@
             for (let i = rows.length - 1; i >= 1; i--) {
                 let r = rows[i];
                 if (r.length >= 1 && r[0]) {
-                    let tourna
+                    let tournamentName = r[0].trim() || '';       
+                    let matchTypeRound = r[1] || '';       
+                    let topQualify = r[2] || '';           
+                    let date = r[3] || 'Upcoming';                 
+                    let maps = r[4] || '';                 
+                    let matchTime = r[5] || '';            
+                    let startTime = r[6] || '';            
+                    let status = r[7] || '';               
+                    let investmentAmount = parseFloat(r[8]) || 0; 
+                    let prizeAmount = parseFloat(r[9]) || 0;      
+                    let notes = r[10] || '';                      
+
+                    totalIncome += prizeAmount;
+
+                    let tourKey = tournamentName.toLowerCase();
+                    if (investmentAmount > 0) {
+                        if (!registeredTournaments.has(tourKey)) {
+                            totalExpense += investmentAmount;
+                            registeredTournaments.add(tourKey);
+
+                            globalTransactions.push({
+                                type: 'expense',
+                                title: `Entry Fee: ${tournamentName}`,
+                                date: date,
+                                amount: investmentAmount
+                            });
+                        }
+                    }
+
+                    if (prizeAmount > 0) {
+                        globalTransactions.push({
+                            type: 'income',
+                            title: `Prize Won: ${tournamentName}`,
+                            date: date,
+                            amount: prizeAmount
+                        });
+                    }
+
+                    let statusLower = status.toLowerCase();
+                    let isHistory = statusLower.includes('completed') || statusLower.includes('finished') || statusLower.includes('played');
+                    let cardClass = isHistory ? 'match-card history-card' : 'match-card live-card';
+
+                    let cardContent = `
+                        <div class="${cardClass}">
+                            <div class="match-header">
+                                <span class="match-title">🔥 ${tournamentName} ${matchTypeRound ? `<span style="font-size:0.9rem; font-weight:normal;">(${matchTypeRound})</span>` : ''}</span>
+                                <span class="match-time-badge" style="${isHistory ? 'background: rgba(107, 114, 128, 0.15); color: #9ca3af;' : ''}">📅 ${date}</span>
+                            </div>
+                            <div class="match-details">
+                                ${maps ? `<span>Maps: <strong>${maps}</strong></span>` : ''}
+                                ${matchTime ? `<span>Match Time: <strong>${matchTime}</strong></span>` : ''}
+                                ${startTime ? `<span>Start Time: <strong>${startTime}</strong></span>` : ''}
+                                ${topQualify ? `<span>Top Qualify: <strong>${topQualify}</strong></span>` : ''}
+                                ${status ? `<span>Status: <strong style="${isHistory ? 'color:#9ca3af;' : 'color:#fbbf24;'}">${status}</strong></span>` : ''}
+                                ${investmentAmount > 0 ? `<span>Investment: <strong style="color:var(--expense-color);">৳${investmentAmount}</strong></span>` : ''}
+                                ${prizeAmount > 0 ? `<span>Prize Won: <strong style="color:var(--income-color);">৳${prizeAmount}</strong></span>` : ''}
+                            </div>
+                            ${notes ? `<div class="rule-text" style="${isHistory ? 'border-color:#4b5563; background:rgba(75,85,99,0.1); color:#9ca3af;' : ''}">📝 <strong>Notes:</strong> ${notes}</div>` : ''}
+                        </div>
+                    `;
+
+                    if (isHistory) historyHtml += cardContent;
+                    else liveHtml += cardContent;
+                }
+            }
+            
+            document.getElementById('live-container').innerHTML 
