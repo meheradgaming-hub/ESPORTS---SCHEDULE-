@@ -37,6 +37,17 @@
             margin-bottom: 25px;
         }
 
+        /* লোগো স্টাইল */
+        .site-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-color);
+            margin-bottom: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
         header h1 {
             font-size: 1.8rem;
             color: var(--accent-color);
@@ -122,27 +133,6 @@
             margin-top: 8px;
         }
 
-        .team-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-            list-style: none;
-        }
-
-        .team-list li {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 10px 14px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            border: 1px solid var(--border-color);
-        }
-
-        .team-list li span {
-            color: var(--accent-color);
-            font-weight: bold;
-            margin-right: 8px;
-        }
-
         .loading {
             text-align: center;
             color: var(--text-muted);
@@ -154,7 +144,11 @@
 
     <div class="container">
         <header>
-            <h1>Neo Flash Team Tournaments</h1>
+            <!-- লোগো ইমেজ অপশন (এখানে লোগোর লিংক বসাতে পারেন) -->
+            <img src="https://i.ibb.co.com/example-logo.png" alt="Squad Logo" class="site-logo" id="site-logo">
+            
+            <!-- স্কোয়াড নাম অপশন -->
+            <h1 id="squad-title">NEO FLASH TEAM</h1>
             <p>Live Squad Schedule & Match Updates</p>
         </header>
 
@@ -165,20 +159,11 @@
                 <div class="loading">Loading schedules from Google Sheets...</div>
             </div>
         </div>
-
-        <!-- Team List Section -->
-        <div class="card">
-            <h2 class="section-title">👥 Participating Teams</h2>
-            <ul class="team-list" id="team-list-container">
-                <div class="loading">Loading teams...</div>
-            </ul>
-        </div>
     </div>
 
     <script>
-        // 👉 আপনার গুগল শিটের Publish করা CSV লিংক দুটি এখানে বসাবেন:
-        const MATCHES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSS4qBkfEOR5NJ2q_5XBBXiBqMcvt5HLq6xeNB3faS_88ZEL2XwwkT2wXVXuYHKV_zU7PPD26S0vu_f/pubhtml';
-        const TEAMS_CSV_URL = 'https://docs.google.com/spreadsheets/d/131X2ZImv5RlYtUFqwZiuxm1cBxSGhiZrMY85akibdso/export?format=csv&gid=01';
+        // 👉 আপনার গুগল শিটের Publish করা CSV লিংকটি এখানে বসাবেন:
+        const MATCHES_CSV_URL = 'https://docs.google.com/spreadsheets/d/1ntxtcAxIKwYPBzBsaZJbqGHCTpLBHLZ0uQfolmBtuuo/export?format=csv&gid=0';
 
         async function fetchGoogleSheetData() {
             try {
@@ -188,12 +173,6 @@
                     parseMatches(matchText);
                 } else {
                     document.getElementById('schedule-container').innerHTML = '<p style="color:#ef4444; text-align:center;">Please update your Matches CSV link in the code!</p>';
-                }
-
-                if(TEAMS_CSV_URL.includes('http')) {
-                    const teamRes = await fetch(TEAMS_CSV_URL);
-                    const teamText = await teamRes.text();
-                    parseTeams(teamText);
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -226,22 +205,41 @@
         function parseMatches(csvText) {
             const rows = parseCSV(csvText);
             let html = '';
+            
             for (let i = 1; i < rows.length; i++) {
                 let r = rows[i];
-                if (r.length >= 5 && r[0]) {
+                if (r.length >= 1 && r[0]) {
+                    // শিটের কলাম অনুযায়ী নতুন ফিল্ডগুলো সেট করা হলো:
+                    let tournamentName = r[0] || '';       // Tournament Name
+                    let matchTypeRound = r[1] || '';       // Match Type / Round
+                    let topQualify = r[2] || '';           // Top Qualify
+                    let date = r[3] || '';                 // Date
+                    let maps = r[4] || '';                 // Maps
+                    let matchTime = r[5] || '';            // Match Time
+                    let startTime = r[6] || '';            // Start Time
+                    let status = r[7] || '';               // Status
+                    let investmentAmount = r[8] || '';     // Investment Amount (৳)
+                    let notes = r[9] || '';                // Notes
+
                     html += `
                         <div class="match-card">
                             <div class="match-header">
-                                <span class="match-title">🔥 ${r[0]}</span>
-                                <span class="match-time-badge">⏰ ${r[1]}</span>
+                                <span class="match-title">🔥 ${tournamentName} (${matchTypeRound})</span>
+                                <span class="match-time-badge">📅 ${date}</span>
                             </div>
                             <div class="match-details">
-                                <span>Map/Type: <strong>${r[2]}</strong></span>
-                                <span>Timing: <strong>${r[3]}</strong></span>
+                                ${maps ? `<span>Maps: <strong>${maps}</strong></span>` : ''}
+                                ${matchTime ? `<span>Match Time: <strong>${matchTime}</strong></span>` : ''}
+                                ${startTime ? `<span>Start Time: <strong>${startTime}</strong></span>` : ''}
+                                ${topQualify ? `<span>Top Qualify: <strong>${topQualify}</strong></span>` : ''}
+                                ${status ? `<span>Status: <strong>${status}</strong></span>` : ''}
+                                ${investmentAmount ? `<span>Investment: <strong>৳${investmentAmount}</strong></span>` : ''}
                             </div>
-                            <div class="rule-text">
-                                🏆 <strong>Status/Rules:</strong> ${r[4]}
-                            </div>
+                            ${notes ? `
+                                <div class="rule-text">
+                                    📝 <strong>Notes:</strong> ${notes}
+                                </div>
+                            ` : ''}
                         </div>
                     `;
                 }
@@ -249,22 +247,8 @@
             document.getElementById('schedule-container').innerHTML = html || '<p style="color:var(--text-muted)">No matches available.</p>';
         }
 
-        function parseTeams(csvText) {
-            const rows = parseCSV(csvText);
-            let html = '';
-            let count = 1;
-            for (let i = 1; i < rows.length; i++) {
-                let r = rows[i];
-                if (r[0] && r[0].trim() !== '') {
-                    let num = count < 10 ? '0' + count : count;
-                    html += `<li><span>${num}</span> ${r[0].trim()}</li>`;
-                    count++;
-                }
-            }
-            document.getElementById('team-list-container').innerHTML = html || '<p style="color:var(--text-muted)">No teams available.</p>';
-        }
-
         fetchGoogleSheetData();
     </script>
 </body>
-</html>
+    </html>
+    
